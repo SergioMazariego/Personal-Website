@@ -1,785 +1,261 @@
 <!doctype html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<meta content="Sergio Mazariego — security engineering, software architecture, and intelligent systems." name="description"/>
+<meta content="Adversarial simulation, detection engineering, and DFIR for banks. Notes on agent systems and automation." name="description"/>
 <meta content="#050505" name="theme-color"/>
 <meta content="Sergio Mazariego" property="og:title"/>
-<meta content="Security engineering, software architecture, and intelligent systems." property="og:description"/>
+<meta content="Adversarial simulation, detection engineering, and DFIR for banks. Notes on agent systems and automation." property="og:description"/>
 <meta content="website" property="og:type"/>
+<meta content="https://sergiomazariego.com/" property="og:url"/>
+<meta content="Sergio Mazariego" property="og:site_name"/>
+<meta content="en_US" property="og:locale"/>
+<meta content="https://sergiomazariego.com/assets/img/sergio-mazariego.jpg" property="og:image"/>
+<meta content="Portrait of Sergio Mazariego" property="og:image:alt"/>
+<meta content="1200" property="og:image:width"/>
+<meta content="1200" property="og:image:height"/>
+<meta content="summary" name="twitter:card"/>
+<meta content="Sergio Mazariego" name="twitter:title"/>
+<meta content="Adversarial simulation, detection engineering, and DFIR for banks. Notes on agent systems and automation." name="twitter:description"/>
+<meta content="https://sergiomazariego.com/assets/img/sergio-mazariego.jpg" name="twitter:image"/>
+<meta content="Portrait of Sergio Mazariego" name="twitter:image:alt"/>
 <title>Sergio Mazariego</title>
-<script>document.documentElement.classList.add('js');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/css/site.css"/>
+<link href="https://sergiomazariego.com/" rel="canonical"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Sergio Mazariego",
+  "url": "https://sergiomazariego.com/",
+  "image": "https://sergiomazariego.com/assets/img/sergio-mazariego.jpg",
+  "jobTitle": "Adversarial Simulation, Detection Engineering & DFIR Leader",
+  "description": "Leads adversarial simulation, detection engineering, and digital forensics and incident response at Devel Security, plus the team's AI and agent-orchestration work.",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Devel Security"
+  },
+  "sameAs": [
+    "https://github.com/SergioMazariego",
+    "https://www.linkedin.com/in/sergiomazariego/"
+  ]
+}
+</script>
 <style>
-    :root {
-      --bg: #050505;
-      --surface: #0c0a0f;
-      --surface-2: #100d14;
-      --text: #f5f3f7;
-      --body: #c9c4cd;
-      --muted: #aaa5b0;
-      --faint: #716b77;
-      --line: #252129;
-      --line-strong: #352a3d;
-      --purple: #5a296f;
-      --purple-2: #74428d;
-      --purple-faint: rgba(90, 41, 111, 0.09);
+  /* Page-specific rules only. Hero, section headings, and the work/writing
+     row pattern live in /assets/css/site.css because the blog listing page
+     reuses them too — see that file for the shared system. */
 
-      --page: 1120px;
-      --article: 760px;
-      --radius: 14px;
-      --topbar: 56px;
-    }
+  /* Services */
 
-    * { box-sizing: border-box; }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--line);
+  }
 
-    html {
-      scroll-behavior: smooth;
-      background: var(--bg);
-    }
+  .service {
+    padding: 26px 36px 28px 0;
+    border-bottom: 1px solid var(--line);
+  }
 
-    body {
-      margin: 0;
-      overflow-x: clip;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 50% -12%, rgba(90,41,111,.18), transparent 34rem),
-        linear-gradient(180deg, #070608 0, var(--bg) 29rem);
-      font-family:
-        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
-      font-size: 17px;
-      line-height: 1.68;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
+  .service:nth-child(odd) {
+    padding-right: 42px;
+    border-right: 1px solid var(--line);
+  }
 
-    ::selection {
-      color: #fff;
-      background: rgba(116,66,141,.52);
-    }
+  .service:nth-child(even) {
+    padding-left: 42px;
+  }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+  .service h3 {
+    margin: 0 0 10px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -.006em;
+  }
 
-    a:focus-visible,
-    button:focus-visible {
-      outline: 2px solid #8c58a5;
-      outline-offset: 3px;
-      border-radius: 4px;
-    }
+  .service p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.65;
+  }
 
-    .page {
-      width: min(calc(100% - 40px), var(--page));
-      margin: 0 auto;
-    }
+  /* Research */
 
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      height: var(--topbar);
-      border-bottom: 1px solid rgba(255,255,255,.055);
-      background: rgba(5,5,5,.78);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-    }
+  .research-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 
-    .topbar-inner {
-      width: min(calc(100% - 40px), var(--page));
-      height: 100%;
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
+  .research-item {
+    padding: 24px 28px 24px 0;
+    border-bottom: 1px solid var(--line);
+  }
 
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: #fff;
-      font-size: 13px;
-      white-space: nowrap;
-    }
+  .research-item:nth-child(odd) {
+    padding-right: 36px;
+    border-right: 1px solid var(--line);
+  }
 
-    .mark {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--purple-2);
-      box-shadow: 0 0 18px rgba(116,66,141,.66);
-    }
+  .research-item:nth-child(even) {
+    padding-left: 36px;
+  }
 
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      font-size: 12px;
-    }
+  .research-item h3 {
+    margin: 0 0 8px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -.006em;
+  }
 
-    .nav a {
-      color: var(--muted);
-      transition: color .2s ease;
-    }
+  .research-item p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.62;
+  }
 
-    .nav a:hover { color: #fff; }
+  /* Experience */
 
-    .progress {
-      position: fixed;
-      top: var(--topbar);
-      left: 0;
-      z-index: 50;
-      width: 0;
-      height: 1px;
-      background: linear-gradient(90deg, #371543, #7a4890);
-      box-shadow: 0 0 10px rgba(116,66,141,.4);
-      pointer-events: none;
-    }
+  .experience-item {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr) minmax(0, .75fr);
+    gap: 28px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+    min-width: 0;
+  }
 
-    .hero {
-      min-height: calc(100svh - var(--topbar));
-      display: flex;
-      align-items: center;
-      padding: 92px 0;
-      border-bottom: 1px solid var(--line);
-    }
+  .experience-period {
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.6;
+  }
 
-    .hero-inner {
-      width: min(100%, 980px);
-    }
+  .experience-role {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+  }
 
-    .eyebrow {
-      margin-bottom: 25px;
-      color: #a277b5;
-      font-size: 11px;
-      font-weight: 680;
-      letter-spacing: .155em;
-      text-transform: uppercase;
-    }
+  .experience-org {
+    color: var(--muted);
+    font-size: 14px;
+  }
 
-    h1 {
-      max-width: 1030px;
-      margin: 0;
-      color: #fff;
-      font-size: clamp(48px, 7vw, 86px);
-      line-height: .96;
-      letter-spacing: -.056em;
-      font-weight: 650;
-      text-wrap: balance;
-    }
+  /* About */
 
-    .hero-copy {
-      max-width: 730px;
-      margin: 31px 0 0;
-      color: #c5c0ca;
-      font-size: clamp(18px, 2vw, 22px);
-      line-height: 1.55;
-      letter-spacing: -.014em;
-      text-wrap: pretty;
-    }
+  .about-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(240px, .7fr);
+    gap: 64px;
+    align-items: start;
+  }
 
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px 20px;
-      margin-top: 38px;
-    }
+  .about-copy {
+    color: var(--body);
+    font-size: 17px;
+    line-height: 1.7;
+  }
 
-    .text-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 560;
-    }
+  .about-copy p {
+    margin: 0 0 18px;
+  }
 
-    .text-link span {
-      transition: transform .2s ease;
-    }
+  .about-photo {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    margin-bottom: 22px;
+    filter: grayscale(1) contrast(1.05) brightness(.94);
+  }
 
-    .text-link:hover span {
-      transform: translateX(3px);
-    }
+  .about-meta {
+    border-top: 1px solid var(--line);
+  }
 
-    .secondary-link {
-      color: var(--muted);
-    }
+  .about-row {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+  }
 
+  .about-key {
+    color: var(--faint);
+    font-family: var(--font-mono);
+  }
 
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      border-top: 1px solid var(--line);
-    }
+  .about-value {
+    color: var(--body);
+  }
 
-    .service {
-      min-height: 220px;
-      padding: 28px 36px 30px 0;
-      border-bottom: 1px solid var(--line);
-    }
+  .about-value a:hover {
+    color: #fff;
+  }
 
-    .service:nth-child(odd) {
-      padding-right: 42px;
-      border-right: 1px solid var(--line);
-    }
-
-    .service:nth-child(even) {
-      padding-left: 42px;
-    }
-
-    .service-index {
-      margin-bottom: 23px;
-      color: var(--faint);
-      font: 11px/1.5 ui-monospace, monospace;
-    }
-
-    .service h3 {
-      margin: 0 0 10px;
-      color: #fff;
-      font-size: 19px;
-      font-weight: 610;
-      letter-spacing: -.014em;
-    }
-
-    .service p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.65;
-    }
-
-    section {
-      padding: 86px 0;
-      border-bottom: 1px solid var(--line);
-      scroll-margin-top: calc(var(--topbar) + 24px);
-    }
-
-    .section-head {
-      display: grid;
-      grid-template-columns: 190px minmax(0, 1fr);
-      gap: 42px;
-      margin-bottom: 42px;
-    }
-
-    .section-label {
-      padding-top: 6px;
-      color: #a277b5;
-      font-size: 11px;
-      font-weight: 680;
-      letter-spacing: .155em;
-      text-transform: uppercase;
-    }
-
-    .section-title {
-      max-width: 720px;
-      margin: 0;
-      color: #fff;
-      font-size: clamp(30px, 4vw, 46px);
-      line-height: 1.08;
-      letter-spacing: -.036em;
-      font-weight: 620;
-      text-wrap: balance;
-    }
-
-    .work-list,
-    .writing-list,
-    .experience-list,
-    .research-list {
-      border-top: 1px solid var(--line);
-    }
-
-    .work-item,
-    .writing-item {
-      position: relative;
-      display: grid;
-      grid-template-columns: 64px minmax(0, 1.25fr) minmax(220px, .8fr) 24px;
-      gap: 26px;
-      align-items: start;
-      padding: 28px 0;
-      border-bottom: 1px solid var(--line);
-      transition:
-        background .22s ease,
-        border-color .22s ease;
-    }
-
-    .work-item::before,
-    .writing-item::before {
-      content: "";
-      position: absolute;
-      inset: 0 -18px;
-      z-index: -1;
-      border-radius: 12px;
-      background: transparent;
-      transition: background .22s ease;
-    }
-
-    .work-item:hover::before,
-    .writing-item:hover::before {
-      background: rgba(90,41,111,.055);
-    }
-
-    .index {
-      color: var(--faint);
-      font: 11px/1.6 ui-monospace, monospace;
-    }
-
-    .item-title {
-      margin: 0 0 8px;
-      color: #fff;
-      font-size: 20px;
-      line-height: 1.25;
-      letter-spacing: -.016em;
-      font-weight: 610;
-    }
-
-    .item-copy {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.62;
-    }
-
-    .item-meta {
-      color: #8e8893;
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    .arrow {
-      color: #8f6aa2;
-      transition:
-        transform .22s ease,
-        color .22s ease;
-    }
-
-    .work-item:hover .arrow,
-    .writing-item:hover .arrow {
-      color: #fff;
-      transform: translateX(4px);
-    }
-
-    .section-cta {
-      margin-top: 28px;
-    }
-
-    .research-list {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-    }
-
-    .research-item {
-      padding: 26px 28px 26px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
+  @media (max-width: 760px) {
+    .service:nth-child(odd),
     .research-item:nth-child(odd) {
-      padding-right: 36px;
-      border-right: 1px solid var(--line);
+      border-right: 0;
     }
 
+    .services-grid,
+    .research-list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .service,
+    .service:nth-child(odd),
+    .service:nth-child(even),
+    .research-item,
+    .research-item:nth-child(odd),
     .research-item:nth-child(even) {
-      padding-left: 36px;
-    }
-
-    .research-item h3 {
-      margin: 0 0 8px;
-      color: #fff;
-      font-size: 17px;
-      font-weight: 610;
-      letter-spacing: -.012em;
-    }
-
-    .research-item p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.62;
-    }
-
-    .writing-item {
-      grid-template-columns: 120px minmax(0, 1fr) 160px 24px;
-    }
-
-    .writing-date {
-      color: var(--faint);
-      font: 11px/1.6 ui-monospace, monospace;
+      padding: 20px 0;
     }
 
     .experience-item {
-      display: grid;
-      grid-template-columns: 170px minmax(0, 1fr) minmax(220px, .75fr);
-      gap: 28px;
-      padding: 22px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .experience-period {
-      color: var(--faint);
-      font: 11px/1.6 ui-monospace, monospace;
-    }
-
-    .experience-role {
-      color: #fff;
-      font-size: 16px;
-      font-weight: 610;
-    }
-
-    .experience-org {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .principles {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 0;
-      border-top: 1px solid var(--line);
-    }
-
-    .principle {
-      min-height: 180px;
-      padding: 28px 34px 30px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .principle:nth-child(odd) {
-      padding-right: 42px;
-      border-right: 1px solid var(--line);
-    }
-
-    .principle:nth-child(even) {
-      padding-left: 42px;
-    }
-
-    .principle h3 {
-      margin: 0 0 10px;
-      color: #fff;
-      font-size: 18px;
-      font-weight: 610;
-      letter-spacing: -.012em;
-    }
-
-    .principle p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.65;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 4px;
+      padding: 16px 0;
     }
 
     .about-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(260px, .7fr);
-      gap: 72px;
-      align-items: start;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
     }
 
-    .about-copy {
-      color: #d3ced6;
-      font-size: 19px;
-      line-height: 1.7;
+    .about-photo {
+      max-width: 140px;
     }
+  }
 
-    .about-copy p {
-      margin: 0 0 20px;
-    }
-
-    .about-meta {
-      border-top: 1px solid var(--line);
-    }
-
+  @media (max-width: 430px) {
     .about-row {
-      display: grid;
-      grid-template-columns: 92px minmax(0,1fr);
-      gap: 16px;
-      padding: 13px 0;
-      border-bottom: 1px solid var(--line);
-      font-size: 13px;
+      grid-template-columns: 78px minmax(0, 1fr);
     }
-
-    .about-key { color: var(--faint); }
-    .about-value { color: var(--body); }
-
-    footer {
-      padding: 42px 0 calc(60px + env(safe-area-inset-bottom, 0px));
-    }
-
-    .footer-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 32px;
-      padding-top: 34px;
-      border-top: 1px solid var(--line);
-    }
-
-    .footer-name {
-      margin-bottom: 5px;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 610;
-    }
-
-    .footer-copy {
-      max-width: 560px;
-      color: var(--faint);
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 12px 18px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .footer-links a:hover { color: #fff; }
-
-    .reveal {
-      opacity: 1;
-      transform: none;
-    }
-
-    .js .reveal {
-      opacity: 0;
-      transform: translateY(12px);
-      transition:
-        opacity .62s cubic-bezier(.2,.75,.2,1),
-        transform .62s cubic-bezier(.2,.75,.2,1);
-    }
-
-    .js .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (max-width: 900px) {
-      .section-head {
-        grid-template-columns: 145px minmax(0,1fr);
-        gap: 30px;
-      }
-
-      .work-item {
-        grid-template-columns: 48px minmax(0, 1fr) 220px 24px;
-        gap: 18px;
-      }
-
-      .writing-item {
-        grid-template-columns: 100px minmax(0, 1fr) 130px 24px;
-        gap: 18px;
-      }
-
-      .experience-item {
-        grid-template-columns: 130px minmax(0, 1fr) 180px;
-      }
-
-      .about-grid {
-        gap: 44px;
-      }
-    }
-
-    @media (max-width: 760px) {
-      :root { --topbar: 52px; }
-
-      body {
-        font-size: 16px;
-      }
-
-      .page,
-      .topbar-inner {
-        width: calc(100% - 24px);
-      }
-
-      .nav {
-        display: none;
-      }
-
-      .hero {
-        min-height: auto;
-        padding: 78px 0 64px;
-      }
-
-      h1 {
-        font-size: clamp(42px, 12vw, 62px);
-        line-height: .99;
-      }
-
-      .hero-copy {
-        margin-top: 25px;
-        font-size: 17px;
-      }
-
-      .hero-actions {
-        margin-top: 30px;
-      }
-
-      section {
-        padding: 62px 0;
-      }
-
-      .section-head {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        margin-bottom: 30px;
-      }
-
-      .section-title {
-        font-size: clamp(29px, 8vw, 38px);
-      }
-
-      .work-item,
-      .writing-item {
-        grid-template-columns: 34px minmax(0, 1fr) 18px;
-        gap: 12px;
-        padding: 22px 0;
-      }
-
-      .item-meta,
-      .writing-date {
-        grid-column: 2;
-      }
-
-      .work-item .arrow,
-      .writing-item .arrow {
-        grid-column: 3;
-        grid-row: 1;
-      }
-
-      .research-list,
-      .principles,
-      .services-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .research-item,
-      .research-item:nth-child(odd),
-      .research-item:nth-child(even),
-      .principle,
-      .principle:nth-child(odd),
-      .principle:nth-child(even),
-      .service,
-      .service:nth-child(odd),
-      .service:nth-child(even) {
-        padding: 22px 0;
-        border-right: 0;
-      }
-
-      .principle,
-      .service {
-        min-height: 0;
-      }
-
-      .experience-item {
-        grid-template-columns: 1fr;
-        gap: 5px;
-        padding: 18px 0;
-      }
-
-      .about-grid {
-        grid-template-columns: 1fr;
-        gap: 30px;
-      }
-
-      .about-copy {
-        font-size: 17px;
-      }
-
-      .footer-grid {
-        grid-template-columns: 1fr;
-        gap: 22px;
-      }
-
-      .footer-links {
-        justify-content: flex-start;
-      }
-    }
-
-    @media (max-width: 430px) {
-      .page,
-      .topbar-inner {
-        width: calc(100% - 20px);
-      }
-
-      .hero {
-        padding: 64px 0 54px;
-      }
-
-      h1 {
-        font-size: 40px;
-      }
-
-      .hero-actions {
-        gap: 10px 16px;
-      }
-
-      section {
-        padding: 54px 0;
-      }
-
-      .item-title {
-        font-size: 18px;
-      }
-
-      .work-item,
-      .writing-item {
-        grid-template-columns: 28px minmax(0, 1fr) 16px;
-        gap: 10px;
-      }
-
-      .about-row {
-        grid-template-columns: 78px minmax(0,1fr);
-      }
-    }
-
-    @media (max-width: 360px) {
-      .page,
-      .topbar-inner {
-        width: calc(100% - 16px);
-      }
-
-      h1 { font-size: 36px; }
-
-      .hero {
-        padding-top: 54px;
-      }
-
-      .hero-actions {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-
-      *, *::before, *::after {
-        animation-duration: .001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .001ms !important;
-      }
-
-      .js .reveal {
-        opacity: 1 !important;
-        transform: none !important;
-      }
-    }
-  </style>
-<link href="https://sergiomazariego.com/" rel="canonical"/></head>
+  }
+</style>
+</head>
 <body>
-<div class="progress" id="progress"></div>
 <header class="topbar">
 <div class="topbar-inner">
-<a aria-label="Sergio Mazariego home" class="brand" href="#top">
-<span class="mark"></span>
-<span>Sergio Mazariego</span>
-</a>
+<a aria-label="Sergio Mazariego home" class="brand" href="#top">Sergio Mazariego</a>
 <nav aria-label="Primary navigation" class="nav">
 <a href="#services">Services</a>
 <a href="#work">Work</a>
@@ -794,15 +270,12 @@
 <section class="hero">
 <div class="page">
 <div class="hero-inner">
-<div class="eyebrow reveal">Security engineering · Software architecture · Applied AI</div>
-<h1 class="reveal">
-            Security engineering, software architecture, and intelligent systems.
-          </h1>
-<p class="hero-copy reveal">
-            I work across DFIR, red teaming, penetration testing, security engineering, software architecture, and applied AI—building systems that make complex technical work repeatable, observable, and increasingly autonomous.
-          </p>
-<div class="hero-actions reveal">
-<a class="text-link" href="#services">Security services <span>→</span></a>
+<h1>I lead adversarial simulation and incident response for banks.</h1>
+<p class="hero-copy">
+At Devel Security I run a five-person team covering adversarial simulation, detection engineering, and digital forensics for banks across the region. We've handled more than 100 incidents in almost six years. I also lead the team's AI work: agent orchestration, internal tooling, automation.
+</p>
+<div class="hero-actions">
+<a class="text-link" href="#services">What I do <span>→</span></a>
 <a class="text-link secondary-link" href="/blog/">Writing <span>→</span></a>
 </div>
 </div>
@@ -810,110 +283,114 @@
 </section>
 <section id="services">
 <div class="page">
-<div class="section-head reveal">
-<div class="section-label">Security services</div>
-<h2 class="section-title">Hands-on cybersecurity work, from assessment through response.</h2>
+<div class="section-head">
+<h2 class="section-title">What I lead at Devel Security.</h2>
 </div>
-<div class="services-grid reveal">
+<div class="services-grid">
 <div class="service">
-<div class="service-index">01</div>
-<h3>DFIR &amp; Incident Response</h3>
-<p>Digital forensics, endpoint evidence collection, incident triage, investigation, containment support, and response workflow engineering.</p>
+<h3>Adversarial Simulation</h3>
+<p>Adversary emulation and red team exercises mapped to MITRE ATT&amp;CK, run with Caldera, Atomic Red Team, Cobalt Strike, and Sliver.</p>
 </div>
 <div class="service">
-<div class="service-index">02</div>
-<h3>Red Teaming &amp; Adversarial Simulation</h3>
-<p>Adversary emulation, breach-and-attack simulation, attack-path validation, and exercises designed to produce actionable defensive feedback.</p>
+<h3>Detection Engineering</h3>
+<p>Detection logic built on Sigma rules and Sysmon telemetry, tuned across Splunk, Microsoft Sentinel, and Elastic, with Cortex XDR as the EDR.</p>
 </div>
 <div class="service">
-<div class="service-index">03</div>
-<h3>Penetration Testing</h3>
-<p>Security assessment and vulnerability validation across applications, APIs, infrastructure, and common enterprise attack surfaces.</p>
+<h3>Digital Forensics &amp; Incident Response</h3>
+<p>Endpoint evidence collection and incident investigation using Velociraptor and KAPE. More than 100 incidents closed since 2020.</p>
 </div>
 <div class="service">
-<div class="service-index">04</div>
-<h3>Security Engineering &amp; Automation</h3>
-<p>Detection engineering, security tooling, SOC automation, investigation workflows, and software that reduces repetitive operational work.</p>
+<h3>AI &amp; Automation</h3>
+<p>Agent orchestration, internal tooling, and automation for the team, alongside the security work itself.</p>
 </div>
 </div>
 </div>
 </section>
 <section id="work">
 <div class="page">
-<div class="section-head reveal">
-<div class="section-label">Selected work</div>
-<h2 class="section-title">Systems built around operational reality.</h2>
+<div class="section-head">
+<h2 class="section-title">The two projects I can show.</h2>
+<p class="section-dek">Most of the job is under NDA for banking clients. These two aren't.</p>
 </div>
-<div class="work-list reveal"><a class="work-item" href="/blog/from-coding-agents-to-engineering-systems/"><div class="index">01</div><div><h3 class="item-title">Agentic Engineering Harness</h3><p class="item-copy">A validated hierarchical architecture for planning, implementation, verification, independent challenge, persistent memory, and evaluation.</p></div><div class="item-meta">Agent systems · Evaluation · Architecture</div><div class="arrow">→</div></a><a class="work-item" href="https://github.com/SergioMazariego/Mantis" rel="noopener noreferrer" target="_blank"><div class="index">02</div><div><h3 class="item-title">Mantis</h3><p class="item-copy">A public DFIR-focused project for rapid Windows evidence collection and endpoint investigation workflows.</p></div><div class="item-meta">DFIR · Security tooling · Go</div><div class="arrow">→</div></a></div>
-
+<div class="work-list">
+<a class="work-item" href="/blog/from-coding-agents-to-engineering-systems/">
+<div>
+<h3 class="item-title">Agentic Engineering Harness</h3>
+<p class="item-copy">A hierarchical architecture for planning, implementation, verification, independent challenge, memory, and evaluation in agentic software engineering.</p>
+</div>
+<div class="item-meta">Agent systems · Architecture</div>
+<div class="arrow">→</div>
+</a>
+<a class="work-item" href="https://github.com/SergioMazariego/Mantis" rel="noopener noreferrer" target="_blank">
+<div>
+<h3 class="item-title">Mantis</h3>
+<p class="item-copy">Windows forensics collector written in Go. Wraps Sysinternals and NirSoft utilities to pull running processes, TCP connections, autorun persistence, event logs, PowerShell history, and temp files into one artifacts folder. Needs admin rights.</p>
+</div>
+<div class="item-meta">Go · DFIR tooling</div>
+<div class="arrow">→</div>
+</a>
+</div>
 </div>
 </section>
 <section id="research">
 <div class="page">
-<div class="section-head reveal">
-<div class="section-label">Current research</div>
-<h2 class="section-title">Questions worth testing, not just discussing.</h2>
+<div class="section-head">
+<h2 class="section-title">What I'm testing right now.</h2>
 </div>
-<div class="research-list reveal">
+<div class="research-list">
 <div class="research-item">
 <h3>Agent orchestration</h3>
 <p>How should planners, workers, verifiers, challengers, and memory interact?</p>
 </div>
 <div class="research-item">
 <h3>Persistent memory</h3>
-<p>What knowledge should survive between autonomous engineering sessions?</p>
+<p>What should survive between one autonomous engineering session and the next?</p>
 </div>
 <div class="research-item">
 <h3>Evaluation</h3>
-<p>When does hierarchy actually outperform a strong single agent?</p>
+<p>When does a hierarchy of agents actually beat one strong agent working alone?</p>
 </div>
 <div class="research-item">
 <h3>Resilience</h3>
-<p>How should the system degrade when providers, tools, workers, or memory fail?</p>
+<p>How should the system degrade when a provider, tool, worker, or memory store fails?</p>
 </div>
 <div class="research-item">
 <h3>Adversarial security</h3>
-<p>How should autonomous engineering systems behave when inputs are actively hostile?</p>
+<p>How should an autonomous engineering system behave when its inputs are actively hostile?</p>
 </div>
 <div class="research-item">
 <h3>Autonomous security engineering</h3>
-<p>Which orchestration principles survive the move from coding into security operations?</p>
+<p>Which orchestration principles carry over from coding agents into security operations?</p>
 </div>
 </div>
 </div>
 </section>
 <section id="writing">
 <div class="page">
-<div class="section-head reveal">
-<div class="section-label">Writing</div>
-<h2 class="section-title">Notes from building and testing systems.</h2>
+<div class="section-head">
+<h2 class="section-title">Long-form notes, published rarely.</h2>
 </div>
-<div class="writing-list reveal">
+<div class="writing-list">
 <a class="writing-item" href="/blog/from-coding-agents-to-engineering-systems/">
 <div class="writing-date">12 Sep 2026</div>
 <div>
 <h3 class="item-title">From Coding Agents to Engineering Systems</h3>
-<p class="item-copy">
-                A vendor-agnostic architecture for planning, implementation,
-                verification, memory, and evaluation in agentic software engineering.
-              </p>
+<p class="item-copy">A vendor-agnostic architecture for planning, implementation, verification, memory, and evaluation in agentic software engineering.</p>
 </div>
-<div class="item-meta">Agent systems · Research note</div>
 <div class="arrow">→</div>
 </a>
 </div>
-<div class="section-cta reveal">
+<div class="section-cta">
 <a class="text-link secondary-link" href="/blog/">View all writing <span>→</span></a>
 </div>
 </div>
 </section>
 <section id="experience">
 <div class="page">
-<div class="section-head reveal">
-<div class="section-label">Experience</div>
-<h2 class="section-title">Security work evolving into systems engineering.</h2>
+<div class="section-head">
+<h2 class="section-title">Six years, four roles.</h2>
 </div>
-<div class="experience-list reveal">
+<div class="experience-list">
 <div class="experience-item">
 <div class="experience-period">2025 — Present</div>
 <div class="experience-role">Adversarial Simulation, IR &amp; Detection Engineering Leader</div>
@@ -930,59 +407,29 @@
 <div class="experience-org">Adversarial simulation · DFIR</div>
 </div>
 <div class="experience-item">
-<div class="experience-period">2021 — 2022</div>
+<div class="experience-period">2020 — 2022</div>
 <div class="experience-role">Offensive Security Engineer</div>
 <div class="experience-org">Offensive security</div>
 </div>
 </div>
 </div>
 </section>
-<section id="principles">
-<div class="page">
-<div class="section-head reveal">
-<div class="section-label">Principles</div>
-<h2 class="section-title">How I approach technical systems.</h2>
-</div>
-<div class="principles reveal">
-<div class="principle">
-<h3>Automate judgment last.</h3>
-<p>Automate repeatable work first. Preserve human authority where uncertainty and consequence are high.</p>
-</div>
-<div class="principle">
-<h3>Observability is part of correctness.</h3>
-<p>A system that cannot explain what happened is difficult to operate, evaluate, or trust.</p>
-</div>
-<div class="principle">
-<h3>Architecture should survive tools.</h3>
-<p>Models, vendors, and frameworks change faster than the engineering principles connecting them.</p>
-</div>
-<div class="principle">
-<h3>Evidence over demos.</h3>
-<p>A system is not reliable because it worked once. Claims should be earned through repeatable evaluation.</p>
-</div>
-</div>
-</div>
-</section>
 <section id="about">
 <div class="page">
-<div class="section-head reveal">
-<div class="section-label">About</div>
-<h2 class="section-title">Building where security, software, and AI meet.</h2>
+<div class="section-head">
+<h2 class="section-title">Sergio Mazariego, in brief.</h2>
 </div>
-<div class="about-grid reveal">
+<div class="about-grid">
 <div class="about-copy">
-<p>
-              I’m a security engineer and software architect. My work sits between cybersecurity operations, software systems, automation, and applied AI.
-            </p>
-<p>
-              I’m particularly interested in turning expert workflows into systems
-              that are measurable, reproducible, and eventually autonomous.
-            </p>
+<p>I've spent almost six years in cybersecurity, starting in 2020, mostly around incident response, adversarial simulation, and detection engineering for banks.</p>
+<p>Outside client work, I build the tools the team actually uses: agent harnesses, automations, and small internal apps that cut repetitive investigation steps down.</p>
 </div>
+<div class="about-aside">
+<img alt="Portrait of Sergio Mazariego" class="about-photo" height="200" src="/assets/img/sergio-mazariego.jpg" width="200"/>
 <div class="about-meta">
 <div class="about-row">
-<div class="about-key">Focus</div>
-<div class="about-value">Security · Architecture · AI systems</div>
+<div class="about-key">Role</div>
+<div class="about-value">Adversarial simulation, detection engineering, DFIR (Devel Security)</div>
 </div>
 <div class="about-row">
 <div class="about-key">Writing</div>
@@ -991,6 +438,11 @@
 <div class="about-row">
 <div class="about-key">GitHub</div>
 <div class="about-value"><a href="https://github.com/SergioMazariego" rel="noopener noreferrer" target="_blank">@SergioMazariego →</a></div>
+</div>
+<div class="about-row">
+<div class="about-key">LinkedIn</div>
+<div class="about-value"><a href="https://www.linkedin.com/in/sergiomazariego/" rel="noopener noreferrer" target="_blank">in/sergiomazariego →</a></div>
+</div>
 </div>
 </div>
 </div>
@@ -1003,45 +455,20 @@
 <div>
 <div class="footer-name">Sergio Mazariego</div>
 <div class="footer-copy">
-            Security engineering · Software architecture · Applied AI
-            <br/>
-            © 2026 Sergio Mazariego
-          </div>
+Adversarial simulation · Detection engineering · DFIR
+<br/>
+© 2026 Sergio Mazariego
 </div>
-<div class="footer-links"><a href="#services">Services</a>
+</div>
+<div class="footer-links">
+<a href="#services">Services</a>
 <a href="https://github.com/SergioMazariego" rel="noopener noreferrer" target="_blank">GitHub</a>
+<a href="https://www.linkedin.com/in/sergiomazariego/" rel="noopener noreferrer" target="_blank">LinkedIn</a>
 <a href="/blog/">Writing</a>
 <a href="#about">About</a>
 </div>
 </div>
 </div>
 </footer>
-<script>
-    const progress = document.getElementById('progress');
-
-    const updateProgress = () => {
-      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      progress.style.width = (height > 0 ? (scrollTop / height) * 100 : 0) + '%';
-    };
-
-    window.addEventListener('scroll', updateProgress, { passive: true });
-    updateProgress();
-
-    if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.08 });
-
-      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-    } else {
-      document.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
-    }
-  </script>
 </body>
 </html>

@@ -1,0 +1,497 @@
+/*
+  Sergio Mazariego — shared design system
+  Loaded by index.html, /blog/, and /blog/<post>/ via root-relative path.
+
+  Type system:
+  - Display / structural text (headings, nav, labels, dates, indices):
+    JetBrains Mono — a monospace built for reading code and logs. The whole
+    site is about reading raw system output (event logs, autoruns, TCP
+    tables, ATT&CK technique IDs), so a monospace voice for structure is a
+    literal match for the subject, not a decoration.
+  - Body copy: Source Serif 4 — a text serif built for long-form reading on
+    screen. It reads like an after-action report rather than a marketing
+    page, which is the right register for incident write-ups and research
+    notes.
+
+  Layout rule: any grid track that sits next to a flexible track must use
+  minmax(0, ...) rather than a bare length or a bare `1fr`/`auto`. A bare
+  `1fr` track resolves to `minmax(auto, 1fr)`, so its automatic minimum is
+  the content's min-content size — on a narrow viewport a single long
+  unbreakable token (a URL, "ATT&CK", "orchestration") can force that track,
+  and the whole page, wider than the viewport. minmax(0, 1fr) removes that
+  automatic minimum. Pair it with overflow-wrap so long tokens wrap instead
+  of overflowing when a track still gets tight.
+*/
+
+:root {
+  --bg: #050505;
+  --surface: #0c0a0f;
+  --text: #f5f3f7;
+  --body: #cdc8d2;
+  --muted: #a8a2ae;
+  --faint: #8a8390;
+  --line: #232028;
+  --accent: #9a6db3;
+  --accent-strong: #b98ed6;
+
+  --page: 1120px;
+  --topbar: 56px;
+
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+}
+
+html {
+  background: var(--bg);
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background: var(--bg);
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-mono);
+}
+
+p, li, .item-copy, .about-value, .about-copy p {
+  hyphens: auto;
+}
+
+::selection {
+  color: #fff;
+  background: rgba(154, 109, 179, .45);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+img, svg {
+  max-width: 100%;
+}
+
+.page {
+  width: min(calc(100% - 40px), var(--page));
+  margin: 0 auto;
+}
+
+/* Topbar — shared header used on every page */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: var(--topbar);
+  border-bottom: 1px solid var(--line);
+  background: rgba(5, 5, 5, .82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.topbar-inner {
+  width: min(calc(100% - 40px), var(--page));
+  height: 100%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  min-width: 0;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.nav a {
+  color: var(--muted);
+  transition: color .15s ease;
+  white-space: nowrap;
+}
+
+.nav a:hover {
+  color: #fff;
+}
+
+/* Hero — shared intro pattern used by the homepage and the blog listing */
+
+.hero {
+  min-height: calc(100svh - var(--topbar));
+  display: flex;
+  align-items: center;
+  padding: 92px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.hero-inner {
+  width: min(100%, 940px);
+  min-width: 0;
+}
+
+h1 {
+  max-width: 980px;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(32px, 5.4vw, 62px);
+  line-height: 1.1;
+  letter-spacing: -.01em;
+  font-weight: 600;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.hero-copy {
+  max-width: 680px;
+  margin: 28px 0 0;
+  color: var(--body);
+  font-size: clamp(17px, 1.6vw, 19px);
+  line-height: 1.65;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 34px;
+}
+
+/* Sections — shared heading rhythm */
+
+section {
+  padding: 84px 0;
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: calc(var(--topbar) + 24px);
+  min-width: 0;
+}
+
+.section-head {
+  max-width: 720px;
+  margin-bottom: 40px;
+  min-width: 0;
+}
+
+.section-title {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(24px, 3.2vw, 36px);
+  line-height: 1.18;
+  letter-spacing: -.01em;
+  font-weight: 600;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.section-dek {
+  max-width: 560px;
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* List rows — the "post/work item" pattern shared by the homepage
+   Work/Writing sections and the blog listing page. */
+
+.work-list,
+.writing-list,
+.experience-list,
+.research-list {
+  border-top: 1px solid var(--line);
+}
+
+.work-item,
+.writing-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, .8fr) 24px;
+  gap: 26px;
+  align-items: start;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--line);
+  transition: background .18s ease;
+  min-width: 0;
+}
+
+/*
+  Hover backdrop. It deliberately bleeds past the row's own box so the
+  highlight reads as a full-bleed band rather than a card, but a negative
+  horizontal inset adds to the document's scrollable width and pushed the
+  whole page ~18px wider than the viewport on narrow screens. Clipping the
+  bleed at the list keeps the visual effect without the overflow.
+*/
+.work-item::before,
+.writing-item::before {
+  content: "";
+  position: absolute;
+  inset: 0 -18px;
+  z-index: -1;
+  border-radius: 8px;
+  background: transparent;
+  transition: background .18s ease;
+}
+
+.work-list,
+.writing-list {
+  overflow-x: clip;
+}
+
+.work-item:hover::before,
+.writing-item:hover::before {
+  background: rgba(154, 109, 179, .06);
+}
+
+.writing-item {
+  grid-template-columns: 120px minmax(0, 1fr) 24px;
+}
+
+.item-title {
+  margin: 0 0 8px;
+  color: #fff;
+  font-size: 18px;
+  line-height: 1.3;
+  letter-spacing: -.008em;
+  font-weight: 600;
+  overflow-wrap: break-word;
+}
+
+.item-copy {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.62;
+}
+
+.item-meta {
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.writing-date {
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.arrow {
+  color: var(--accent);
+  transition: transform .18s ease, color .18s ease;
+}
+
+.work-item:hover .arrow,
+.writing-item:hover .arrow {
+  color: #fff;
+  transform: translateX(4px);
+}
+
+.section-cta {
+  margin-top: 26px;
+}
+
+/* Footer — shared across every page */
+
+footer {
+  padding: 42px 0 calc(60px + env(safe-area-inset-bottom, 0px));
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 32px;
+  padding-top: 34px;
+  border-top: 1px solid var(--line);
+}
+
+.footer-name {
+  margin-bottom: 5px;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.footer-copy {
+  max-width: 560px;
+  color: var(--faint);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px 18px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.footer-links a:hover {
+  color: #fff;
+}
+
+/* Generic link treatment used inline in copy and section CTAs */
+
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.text-link span {
+  transition: transform .15s ease;
+}
+
+.text-link:hover span {
+  transform: translateX(3px);
+}
+
+.secondary-link {
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .about-grid {
+    gap: 40px;
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --topbar: 52px;
+  }
+
+  body {
+    font-size: 16px;
+  }
+
+  .page,
+  .topbar-inner {
+    width: calc(100% - 24px);
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 72px 0 60px;
+  }
+
+  .hero-copy {
+    margin-top: 22px;
+  }
+
+  section {
+    padding: 58px 0;
+  }
+
+  .section-title {
+    font-size: clamp(22px, 7vw, 30px);
+  }
+
+  .work-item,
+  .writing-item {
+    grid-template-columns: minmax(0, 1fr) 18px;
+    gap: 8px 12px;
+  }
+
+  .writing-date,
+  .item-meta {
+    grid-column: 1;
+  }
+
+  .work-item .arrow,
+  .writing-item .arrow {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .footer-links {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 430px) {
+  .page,
+  .topbar-inner {
+    width: calc(100% - 20px);
+  }
+
+  .hero {
+    padding: 60px 0 50px;
+  }
+
+  section {
+    padding: 50px 0;
+  }
+
+  .section-title {
+    font-size: clamp(20px, 7.5vw, 26px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}

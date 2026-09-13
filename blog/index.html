@@ -1,41 +1,123 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Writing by Sergio Mazariego on security engineering, software architecture, agent systems, and applied AI." />
-  <meta name="theme-color" content="#050505" />
-  <link rel="canonical" href="https://sergiomazariego.com/blog/" />
-  <title>Writing — Sergio Mazariego</title>
-  <style>
-    :root{--bg:#050505;--text:#f5f3f7;--body:#c9c4cd;--muted:#aaa5b0;--faint:#716b77;--line:#252129;--purple:#74428d;--page:960px}
-    *{box-sizing:border-box}html{background:var(--bg);color-scheme:dark}body{margin:0;background:radial-gradient(circle at 50% -10%,rgba(90,41,111,.17),transparent 31rem),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.68;-webkit-font-smoothing:antialiased}
-    a{color:inherit;text-decoration:none}.page{width:min(calc(100% - 40px),var(--page));margin:auto}
-    header{height:56px;border-bottom:1px solid var(--line);display:flex;align-items:center}.nav{display:flex;justify-content:space-between;align-items:center;width:100%;font-size:13px}.links{display:flex;gap:18px;color:var(--muted);font-size:12px}
-    main{padding:90px 0 100px}.eyebrow{color:#a277b5;text-transform:uppercase;letter-spacing:.15em;font-size:11px;font-weight:680}h1{margin:18px 0 18px;font-size:clamp(44px,7vw,76px);letter-spacing:-.05em;line-height:.98;font-weight:650}.dek{max-width:650px;color:var(--body);font-size:19px}
-    .year{margin-top:70px;color:var(--faint);font:11px ui-monospace,monospace}.list{margin-top:14px;border-top:1px solid var(--line)}.post{display:grid;grid-template-columns:120px minmax(0,1fr) 24px;gap:22px;padding:28px 0;border-bottom:1px solid var(--line)}.date{color:var(--faint);font:11px/1.6 ui-monospace,monospace}.post h2{margin:0 0 8px;font-size:21px;letter-spacing:-.018em}.post p{margin:0;color:var(--muted);font-size:14px}.arrow{color:#8f6aa2}.post:hover .arrow{color:#fff}.meta{grid-column:2;color:#817b85;font-size:12px;margin-top:4px}
-    footer{padding:35px 0 55px;border-top:1px solid var(--line);color:var(--faint);font-size:12px}
-    @media(max-width:760px){.page{width:calc(100% - 24px)}.links a:not(:first-child){display:none}main{padding-top:65px}.post{grid-template-columns:1fr 20px;gap:8px 12px}.date{grid-column:1}.post>div:nth-child(2){grid-column:1}.arrow{grid-column:2;grid-row:2}.meta{grid-column:1}.dek{font-size:17px}}
-    @media(max-width:430px){.page{width:calc(100% - 20px)}h1{font-size:42px}}
-  </style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Writing by Sergio Mazariego on security engineering, software architecture, agent systems, and applied AI." name="description"/>
+<meta content="#050505" name="theme-color"/>
+<meta content="Writing — Sergio Mazariego" property="og:title"/>
+<meta content="Writing by Sergio Mazariego on security engineering, software architecture, agent systems, and applied AI." property="og:description"/>
+<meta content="website" property="og:type"/>
+<meta content="https://sergiomazariego.com/blog/" property="og:url"/>
+<meta content="Sergio Mazariego" property="og:site_name"/>
+<meta content="en_US" property="og:locale"/>
+<meta content="https://sergiomazariego.com/assets/img/sergio-mazariego.jpg" property="og:image"/>
+<meta content="Portrait of Sergio Mazariego" property="og:image:alt"/>
+<meta content="1200" property="og:image:width"/>
+<meta content="1200" property="og:image:height"/>
+<meta content="summary" name="twitter:card"/>
+<meta content="Writing — Sergio Mazariego" name="twitter:title"/>
+<meta content="Writing by Sergio Mazariego on security engineering, software architecture, agent systems, and applied AI." name="twitter:description"/>
+<meta content="https://sergiomazariego.com/assets/img/sergio-mazariego.jpg" name="twitter:image"/>
+<meta content="Portrait of Sergio Mazariego" name="twitter:image:alt"/>
+<title>Writing — Sergio Mazariego</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/css/site.css"/>
+<link href="https://sergiomazariego.com/blog/" rel="canonical"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "Writing — Sergio Mazariego",
+  "url": "https://sergiomazariego.com/blog/",
+  "description": "Writing by Sergio Mazariego on security engineering, software architecture, agent systems, and applied AI.",
+  "author": {
+    "@type": "Person",
+    "name": "Sergio Mazariego",
+    "url": "https://sergiomazariego.com/"
+  }
+}
+</script>
+<style>
+  /* Page-specific: the listing hero doesn't need the homepage's full
+     viewport-height treatment, and the year label only exists here. */
+  .hero {
+    min-height: auto;
+    display: block;
+    padding: 88px 0 8px;
+  }
+
+  .year {
+    margin-top: 46px;
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+
+  @media (max-width: 760px) {
+    .hero {
+      padding: 64px 0 6px;
+    }
+  }
+</style>
 </head>
 <body>
-  <header><div class="page nav"><a href="/">Sergio Mazariego</a><nav class="links"><a href="/blog/">Writing</a><a href="/#services">Services</a><a href="https://github.com/SergioMazariego" target="_blank" rel="noopener noreferrer">GitHub</a></nav></div></header>
-  <main><div class="page">
-    <div class="eyebrow">Writing</div>
-    <h1>Research notes.</h1>
-    <p class="dek">Notes on security engineering, software architecture, agent systems, and applied AI—focused on things I have built, tested, or learned from operating real systems.</p>
-
-    <div class="year">2026</div>
-    <div class="list">
-      <a class="post" href="/blog/from-coding-agents-to-engineering-systems/">
-        <div class="date">12 Sep 2026</div>
-        <div><h2>From Coding Agents to Engineering Systems</h2><p>A vendor-agnostic architecture for planning, implementation, verification, memory, and evaluation in agentic software engineering.</p></div>
-        <div class="arrow">→</div>
-        <div class="meta">Agent systems · Research note</div>
-      </a>
-    </div>
-  </div></main>
-  <footer><div class="page">© 2026 Sergio Mazariego</div></footer>
+<header class="topbar">
+<div class="topbar-inner">
+<a aria-label="Sergio Mazariego home" class="brand" href="/">Sergio Mazariego</a>
+<nav aria-label="Primary navigation" class="nav">
+<a href="/blog/">Writing</a>
+<a href="/#services">Services</a>
+<a href="https://github.com/SergioMazariego" rel="noopener noreferrer" target="_blank">GitHub</a>
+</nav>
+</div>
+</header>
+<main>
+<section class="hero">
+<div class="page">
+<div class="hero-inner">
+<h1>Research notes.</h1>
+<p class="hero-copy">Notes on security engineering, software architecture, agent systems, and applied AI — focused on things I have built, tested, or learned from operating real systems.</p>
+</div>
+</div>
+</section>
+<section>
+<div class="page">
+<div class="year">2026</div>
+<div class="writing-list">
+<a class="writing-item" href="/blog/from-coding-agents-to-engineering-systems/">
+<div class="writing-date">12 Sep 2026</div>
+<div>
+<h2 class="item-title">From Coding Agents to Engineering Systems</h2>
+<p class="item-copy">A vendor-agnostic architecture for planning, implementation, verification, memory, and evaluation in agentic software engineering.</p>
+<p class="item-meta">Agent systems · Research note</p>
+</div>
+<div class="arrow">→</div>
+</a>
+</div>
+</div>
+</section>
+</main>
+<footer>
+<div class="page">
+<div class="footer-grid">
+<div>
+<div class="footer-name">Sergio Mazariego</div>
+<div class="footer-copy">
+Adversarial simulation · Detection engineering · DFIR
+<br/>
+© 2026 Sergio Mazariego
+</div>
+</div>
+<div class="footer-links">
+<a href="/">Home</a>
+<a href="https://github.com/SergioMazariego" rel="noopener noreferrer" target="_blank">GitHub</a>
+<a href="https://www.linkedin.com/in/sergiomazariego/" rel="noopener noreferrer" target="_blank">LinkedIn</a>
+</div>
+</div>
+</div>
+</footer>
 </body>
 </html>
