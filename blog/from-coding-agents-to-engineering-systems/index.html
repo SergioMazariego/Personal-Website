@@ -1,0 +1,1736 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="A vendor-agnostic architecture for planning, implementation, verification, challenge, memory, and evaluation in agentic software engineering systems." name="description"/>
+<meta content="dark" name="color-scheme"/>
+<title>From Coding Agents to Engineering Systems — Sergio Mazariego</title>
+<meta content="#050505" name="theme-color"/>
+<meta content="From Coding Agents to Engineering Systems" property="og:title"/>
+<meta content="Durable principles for planning, implementation, verification, challenge, memory, and evaluation in agentic software engineering." property="og:description"/>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+
+    :root {
+      --bg: #050505;
+      --surface: #0c0a0f;
+      --surface-2: #100d14;
+      --text: #f5f3f7;
+      --body: #c9c4cd;
+      --muted: #aaa5b0;
+      --faint: #716b77;
+      --line: #252129;
+      --line-strong: #352a3d;
+      --purple: #5a296f;
+      --purple-2: #74428d;
+      --purple-faint: rgba(90, 41, 111, 0.09);
+      --article: 760px;
+      --wide: 960px;
+      --radius: 13px;
+      --topbar: 56px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      overflow-x: clip;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% -12%, rgba(90,41,111,.18), transparent 33rem),
+        linear-gradient(180deg, #070608 0, var(--bg) 26rem);
+      font-family:
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      font-size: 17px;
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    ::selection {
+      color: #fff;
+      background: rgba(116,66,141,.52);
+    }
+
+    a {
+      color: #d8c8e1;
+      text-decoration-color: rgba(216,200,225,.35);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    a:hover {
+      color: #fff;
+      text-decoration-color: #fff;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid #8c58a5;
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    p, li, td, th, blockquote {
+      overflow-wrap: break-word;
+    }
+
+    code, pre {
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    :not(pre) > code {
+      padding: .12em .34em;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: #0a080c;
+      color: #ded7e3;
+      font-size: .88em;
+      white-space: nowrap;
+    }
+
+    section[id] {
+      scroll-margin-top: calc(var(--topbar) + 24px);
+    }
+
+    .page {
+      width: min(calc(100% - 40px), 1120px);
+      margin: 0 auto;
+    }
+
+    .article {
+      width: min(100%, var(--article));
+      margin: 0 auto;
+    }
+
+    .wide {
+      width: min(calc(100vw - 64px), var(--wide));
+      margin-left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* ── topbar ─────────────────────────────────────────── */
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      height: var(--topbar);
+      border-bottom: 1px solid rgba(255,255,255,.055);
+      background: rgba(5,5,5,.78);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .topbar-inner {
+      width: min(calc(100% - 40px), 1120px);
+      height: 100%;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      color: #fff;
+      font-size: 13px;
+      letter-spacing: .01em;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .mark {
+      flex: 0 0 auto;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--purple-2);
+      box-shadow: 0 0 17px rgba(116,66,141,.66);
+    }
+
+    .navlinks {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-width: 0;
+      font-size: 12px;
+    }
+
+    .navlinks a {
+      color: var(--muted);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .navlinks a:hover { color: #fff; }
+
+    .progress {
+      position: fixed;
+      top: var(--topbar);
+      left: 0;
+      z-index: 50;
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, #371543, #7a4890);
+      box-shadow: 0 0 10px rgba(116,66,141,.4);
+      pointer-events: none;
+    }
+
+    /* ── hero ───────────────────────────────────────────── */
+
+    .hero {
+      padding: 98px 0 70px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px 15px;
+      margin-bottom: 27px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .015em;
+    }
+
+    .meta .category { color: #d6c1e0; }
+
+    h1 {
+      max-width: 900px;
+      margin: 0;
+      color: #fff;
+      font-size: clamp(44px, 6.6vw, 76px);
+      line-height: .99;
+      letter-spacing: -.052em;
+      font-weight: 650;
+      text-wrap: balance;
+    }
+
+    .dek {
+      max-width: 760px;
+      margin: 29px 0 0;
+      color: #c5c0ca;
+      font-size: clamp(18px, 2vw, 22px);
+      line-height: 1.56;
+      letter-spacing: -.014em;
+      text-wrap: pretty;
+    }
+
+    .thesis {
+      margin: 40px 0 0;
+      padding-top: 23px;
+      border-top: 1px solid var(--line);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 560;
+      letter-spacing: .003em;
+    }
+
+    /* ── article ────────────────────────────────────────── */
+
+    main { padding-bottom: 98px; }
+
+    section {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    section:last-child { border-bottom: 0; }
+
+    .section-label {
+      margin-bottom: 15px;
+      color: #a277b5;
+      font-size: 11px;
+      font-weight: 680;
+      text-transform: uppercase;
+      letter-spacing: .155em;
+    }
+
+    h2 {
+      margin: 0 0 24px;
+      color: #fff;
+      font-size: clamp(30px, 3.7vw, 42px);
+      line-height: 1.1;
+      letter-spacing: -.034em;
+      font-weight: 620;
+      text-wrap: balance;
+    }
+
+    h3 {
+      margin: 45px 0 12px;
+      color: #fff;
+      font-size: 21px;
+      line-height: 1.3;
+      letter-spacing: -.018em;
+      font-weight: 620;
+    }
+
+    p {
+      margin: 0 0 20px;
+      color: var(--body);
+    }
+
+    strong {
+      color: #fff;
+      font-weight: 620;
+    }
+
+    .lead {
+      color: #d8d3dc;
+      font-size: 19px;
+      line-height: 1.66;
+    }
+
+    blockquote {
+      margin: 39px 0;
+      padding: 0 0 0 23px;
+      border-left: 2px solid var(--purple-2);
+      color: #f2edf5;
+      font-size: 21px;
+      line-height: 1.52;
+      letter-spacing: -.014em;
+    }
+
+    .note {
+      margin: 29px 0;
+      padding: 17px 19px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--purple-faint);
+      color: #d5ced9;
+      font-size: 14px;
+      line-height: 1.62;
+    }
+
+    .ref-call {
+      margin-left: 2px;
+      color: #a77abb;
+      font-size: .66em;
+      text-decoration: none;
+      vertical-align: super;
+    }
+
+    /* ── contents ───────────────────────────────────────── */
+
+    .toc {
+      padding: 25px 0 5px;
+    }
+
+    .toc-title {
+      margin-bottom: 12px;
+      color: var(--faint);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+    }
+
+    .toc ol {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 7px 25px;
+    }
+
+    .toc a {
+      display: flex;
+      gap: 9px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      text-decoration: none;
+    }
+
+    .toc a span {
+      flex: 0 0 auto;
+      color: #625c67;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .toc a:hover { color: #fff; }
+
+    /* ── principles ─────────────────────────────────────── */
+
+    .principles {
+      margin-top: 35px;
+      border-top: 1px solid var(--line);
+    }
+
+    .principle {
+      display: grid;
+      grid-template-columns: 48px 205px minmax(0,1fr);
+      gap: 18px;
+      padding: 19px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .principle .n {
+      color: #716b76;
+      font: 12px/1.6 ui-monospace, monospace;
+    }
+
+    .principle .title {
+      color: #fff;
+      font-weight: 610;
+    }
+
+    .principle .desc {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ── diagrams ───────────────────────────────────────── */
+
+    .diagram {
+      margin-top: 37px;
+      margin-bottom: 37px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(90,41,111,.045), transparent 46%),
+        var(--surface);
+      overflow: hidden;
+    }
+
+    .diagram-label {
+      margin-bottom: 18px;
+      color: var(--faint);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .13em;
+      text-align: left;
+    }
+
+    .mermaid {
+      width: 100% !important;
+      min-width: 0 !important;
+      margin: 0 auto !important;
+      padding: 0 !important;
+      display: grid !important;
+      place-items: center !important;
+      text-align: center !important;
+    }
+
+    .mermaid svg {
+      display: block !important;
+      float: none !important;
+      max-width: 100% !important;
+      height: auto !important;
+      margin-inline: auto !important;
+    }
+
+    /* Sequence diagrams include actors, notes and lifelines outside the main
+       content group. Preserve Mermaid's native viewBox instead of cropping it. */
+    .diagram-native-viewbox {
+      overflow: visible;
+    }
+
+    .diagram-native-viewbox .mermaid {
+      padding: 8px 14px 14px !important;
+    }
+
+    .diagram-native-viewbox .mermaid svg {
+      width: min(100%, 820px) !important;
+      max-width: 100% !important;
+      overflow: visible !important;
+    }
+
+    /* ── tables ─────────────────────────────────────────── */
+
+    .table-wrap {
+      margin-top: 33px;
+      margin-bottom: 33px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.008);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    caption {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    th, td {
+      padding: 14px 15px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    th {
+      color: #8b858f;
+      background: rgba(255,255,255,.018);
+      font-size: 10px;
+      font-weight: 680;
+      text-transform: uppercase;
+      letter-spacing: .115em;
+    }
+
+    td { color: #c9c4cd; }
+
+    .reference-table th:nth-child(1),
+    .reference-table td:nth-child(1) { width: 22%; }
+
+    .reference-table th:nth-child(2),
+    .reference-table td:nth-child(2) { width: 25%; }
+
+    .validation-table th:nth-child(1),
+    .validation-table td:nth-child(1) { width: 25%; }
+
+    .validation-table th:nth-child(2),
+    .validation-table td:nth-child(2) { width: 18%; }
+
+    .status {
+      color: #dac7e3;
+      font-weight: 680;
+    }
+
+    /* ── code ───────────────────────────────────────────── */
+
+    .code-block {
+      position: relative;
+      margin: 29px 0;
+    }
+
+    pre:not(.mermaid) {
+      margin: 0;
+      padding: 43px 20px 20px;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #080709;
+      color: #ded9e1;
+      font-size: 13px;
+      line-height: 1.64;
+      tab-size: 2;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .copy {
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      z-index: 2;
+      padding: 5px 8px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: rgba(13,11,16,.94);
+      color: #9c96a1;
+      font: inherit;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .copy:hover {
+      color: #fff;
+      border-color: var(--purple);
+    }
+
+    /* ── findings / roadmap / metrics ───────────────────── */
+
+    .finding {
+      padding: 23px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .finding:last-child {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .finding-head {
+      display: flex;
+      gap: 13px;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .finding-num {
+      flex: 0 0 auto;
+      color: #716b76;
+      font: 11px ui-monospace, monospace;
+    }
+
+    .finding-title {
+      color: #fff;
+      font-weight: 620;
+    }
+
+    .finding p {
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.62;
+    }
+
+    .roadmap {
+      margin-top: 29px;
+      border-top: 1px solid var(--line);
+    }
+
+    .roadmap-item {
+      display: grid;
+      grid-template-columns: 70px minmax(0,1fr);
+      gap: 17px;
+      padding: 17px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .version {
+      padding-top: 3px;
+      color: #a277b5;
+      font: 11px ui-monospace, monospace;
+      white-space: nowrap;
+    }
+
+    .roadmap-item h3 {
+      margin: 0 0 5px;
+      font-size: 16px;
+    }
+
+    .roadmap-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .metrics {
+      margin: 23px 0 0;
+      padding-left: 20px;
+      columns: 2;
+      column-gap: 44px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .metrics li {
+      margin-bottom: 7px;
+      break-inside: avoid;
+    }
+
+    /* ── references / footer ────────────────────────────── */
+
+    .refs {
+      padding-left: 22px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .refs li {
+      margin-bottom: 8px;
+      scroll-margin-top: calc(var(--topbar) + 20px);
+    }
+
+    footer {
+      width: 100%;
+      padding: 38px 0 calc(62px + env(safe-area-inset-bottom, 0px));
+      border-top: 1px solid var(--line);
+      color: var(--faint);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .footer-inner {
+      width: min(calc(100% - 40px), var(--article));
+      margin: 0 auto;
+      min-width: 0;
+    }
+
+    .footer-copy {
+      display: block;
+      max-width: 680px;
+      overflow-wrap: anywhere;
+    }
+
+    /* ── motion: progressive enhancement ───────────────── */
+
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(12px);
+      transition:
+        opacity .62s cubic-bezier(.2,.75,.2,1),
+        transform .62s cubic-bezier(.2,.75,.2,1);
+    }
+
+    .js .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .js .hero .reveal:nth-child(1) { transition-delay: .03s; }
+    .js .hero .reveal:nth-child(2) { transition-delay: .08s; }
+    .js .hero .reveal:nth-child(3) { transition-delay: .13s; }
+    .js .hero .reveal:nth-child(4) { transition-delay: .18s; }
+
+
+    /* ── global responsive safeguards ───────────────────── */
+
+    img,
+    svg {
+      max-width: 100%;
+    }
+
+    main,
+    header,
+    footer,
+    section,
+    .page,
+    .article,
+    .wide,
+    .diagram,
+    .table-wrap,
+    .code-block,
+    .principle,
+    .finding,
+    .roadmap-item {
+      min-width: 0;
+    }
+
+    pre,
+    code,
+    .finding-title,
+    .roadmap-item p,
+    .principle .desc {
+      overflow-wrap: anywhere;
+    }
+
+    /* ── laptop / tablet ────────────────────────────────── */
+
+    @media (max-width: 1024px) {
+      .page,
+      .topbar-inner {
+        width: min(calc(100% - 32px), 980px);
+      }
+
+      .footer-inner {
+        width: min(calc(100% - 32px), var(--article));
+      }
+
+      .wide {
+        width: min(calc(100vw - 32px), 900px);
+      }
+
+      .diagram {
+        padding: 22px 20px;
+      }
+    }
+
+    /* ── mobile ─────────────────────────────────────────── */
+
+    @media (max-width: 760px) {
+      :root { --topbar: 52px; }
+
+      body {
+        font-size: 16px;
+        line-height: 1.68;
+      }
+
+      .page,
+      .topbar-inner {
+        width: calc(100% - 24px);
+      }
+
+      .footer-inner {
+        width: calc(100% - 24px);
+      }
+
+      footer {
+        padding-top: 30px;
+        padding-bottom: calc(42px + env(safe-area-inset-bottom, 0px));
+        font-size: 12px;
+      }
+
+      .footer-copy {
+        max-width: 100%;
+      }
+
+      .navlinks {
+        display: none;
+      }
+
+      .brand {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .hero {
+        padding: 66px 0 52px;
+      }
+
+      h1 {
+        font-size: clamp(39px, 11.5vw, 55px);
+        line-height: 1.01;
+        letter-spacing: -.047em;
+      }
+
+      .dek {
+        margin-top: 24px;
+        font-size: 17px;
+        line-height: 1.58;
+      }
+
+      .thesis {
+        margin-top: 31px;
+        padding-top: 20px;
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .toc {
+        padding-top: 21px;
+      }
+
+      .toc ol {
+        grid-template-columns: 1fr;
+        gap: 7px;
+      }
+
+      section {
+        padding: 54px 0;
+      }
+
+      h2 {
+        font-size: clamp(29px, 8vw, 37px);
+      }
+
+      h3 {
+        margin-top: 38px;
+        font-size: 20px;
+      }
+
+      .lead {
+        font-size: 17px;
+      }
+
+      blockquote {
+        margin: 31px 0;
+        padding-left: 17px;
+        font-size: 18px;
+        line-height: 1.55;
+      }
+
+      .wide {
+        width: 100%;
+        margin-left: 0;
+        transform: none;
+      }
+
+      .principle {
+        grid-template-columns: 34px minmax(0,1fr);
+        gap: 12px;
+        padding: 17px 0;
+      }
+
+      .principle .title {
+        line-height: 1.5;
+      }
+
+      .principle .desc {
+        grid-column: 2;
+        font-size: 14px;
+      }
+
+      .diagram {
+        width: 100%;
+        margin: 27px auto;
+        padding: 17px 10px 15px;
+        overflow: hidden;
+      }
+
+      .diagram-label {
+        margin-bottom: 14px;
+        padding-left: 2px;
+      }
+
+      .mermaid svg {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+      }
+
+      .diagram-native-viewbox {
+        overflow: hidden;
+      }
+
+      .diagram-native-viewbox .mermaid {
+        padding: 6px 4px 10px !important;
+      }
+
+      .diagram-native-viewbox .mermaid svg {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: visible !important;
+      }
+
+      /* Mobile tables become readable stacked records, not tiny horizontal tables. */
+      .table-wrap {
+        overflow: visible;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+      }
+
+      table,
+      tbody,
+      tr,
+      td {
+        display: block;
+        width: 100% !important;
+      }
+
+      thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+      }
+
+      tr {
+        margin-bottom: 11px;
+        padding: 8px 14px;
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        background: var(--surface);
+      }
+
+      td {
+        display: grid;
+        grid-template-columns: 105px minmax(0,1fr);
+        gap: 12px;
+        padding: 7px 0;
+        border: 0 !important;
+        font-size: 13px;
+      }
+
+      td::before {
+        content: attr(data-label);
+        color: #817b85;
+        font-size: 10px;
+        font-weight: 680;
+        text-transform: uppercase;
+        letter-spacing: .09em;
+      }
+
+      .code-block {
+        margin: 25px 0;
+      }
+
+      pre:not(.mermaid) {
+        padding: 41px 14px 16px;
+        font-size: 12px;
+        line-height: 1.62;
+      }
+
+      .copy {
+        top: 8px;
+        right: 8px;
+      }
+
+      .finding-head {
+        align-items: flex-start;
+      }
+
+      .roadmap-item {
+        grid-template-columns: 58px minmax(0,1fr);
+        gap: 12px;
+      }
+
+      .metrics {
+        columns: 1;
+      }
+
+      :not(pre) > code {
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .page,
+      .topbar-inner {
+        width: calc(100% - 20px);
+      }
+
+      .footer-inner {
+        width: calc(100% - 20px);
+      }
+
+      footer {
+        padding-top: 27px;
+        padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px));
+      }
+
+      .hero {
+        padding-top: 55px;
+        padding-bottom: 48px;
+      }
+
+      h1 {
+        font-size: clamp(38px, 12vw, 50px);
+      }
+
+      .meta {
+        gap: 6px 12px;
+      }
+
+      .diagram {
+        padding-inline: 8px;
+      }
+
+      td {
+        grid-template-columns: 88px minmax(0,1fr);
+        gap: 10px;
+      }
+
+      .roadmap-item {
+        grid-template-columns: 1fr;
+        gap: 5px;
+      }
+
+      .version {
+        padding-top: 0;
+      }
+    }
+
+
+    @media (max-width: 360px) {
+      .page,
+      .topbar-inner,
+      .footer-inner {
+        width: calc(100% - 16px);
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .hero {
+        padding-top: 48px;
+      }
+
+      section {
+        padding: 48px 0;
+      }
+
+      .diagram {
+        padding-inline: 6px;
+      }
+
+      td {
+        grid-template-columns: 1fr;
+        gap: 3px;
+      }
+
+      td::before {
+        margin-top: 2px;
+      }
+
+      pre:not(.mermaid) {
+        font-size: 11px;
+        padding-inline: 12px;
+      }
+
+      .finding-head {
+        gap: 9px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+      }
+
+      .js .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+
+  </style>
+<link href="https://sergiomazariego.com/blog/from-coding-agents-to-engineering-systems/" rel="canonical"/><meta content="article" property="og:type"/></head>
+<body>
+<div class="progress" id="progress"></div>
+<header class="topbar">
+<div class="topbar-inner">
+<a class="brand" href="/">
+<span class="mark"></span>
+<span>Sergio Mazariego / Writing</span>
+</a>
+<nav aria-label="Article navigation" class="navlinks"><a href="/">Home</a><a href="/blog/">Writing</a><a href="/#services">Services</a></nav>
+</div>
+</header>
+<div class="page" id="top">
+<header class="hero">
+<div class="article">
+<div class="meta reveal">
+<span class="category">Research note</span>
+<span>Sergio Mazariego</span>
+<span>September 2026</span>
+<span>Agent systems engineering</span>
+</div>
+<h1 class="reveal">From Coding Agents to Engineering Systems</h1>
+<p class="dek reveal">
+          A vendor-agnostic architecture for planning, implementation, verification,
+          independent challenge, persistent memory, and evaluation in autonomous
+          software engineering systems.
+        </p>
+<p class="thesis reveal">
+          Planner decides. Worker implements. Verifier proves. Challenger attacks. Memory remembers.
+        </p>
+<div aria-label="Table of contents" class="toc reveal">
+<div class="toc-title">Contents</div>
+<ol>
+<li id="ref-1"><a href="#problem"><span>01</span> Why roles matter more than brands</a></li>
+<li id="ref-2"><a href="#principles"><span>02</span> Durable principles</a></li>
+<li id="ref-3"><a href="#architecture"><span>03</span> Capability architecture</a></li>
+<li id="ref-4"><a href="#implementation"><span>04</span> 2026 reference implementation</a></li>
+<li id="ref-5"><a href="#validation"><span>05</span> End-to-end validation</a></li>
+<li id="ref-6"><a href="#findings"><span>06</span> What failed and what it taught us</a></li>
+<li id="ref-7"><a href="#roadmap"><span>07</span> Research roadmap</a></li>
+<li><a href="#claim"><span>08</span> What V0.1 proves</a></li>
+<li><a href="#references"><span>09</span> References</a></li>
+</ol>
+</div>
+</div>
+</header>
+<main>
+<div class="article">
+<section class="reveal" id="problem">
+<div class="section-label">01 — Framing</div>
+<h2>Roles should survive the tools that implement them.</h2>
+<p class="lead">
+            Agentic coding systems are often described as a stack of product names:
+            one model plans, another coding tool edits, a memory server stores context,
+            and an orchestration runtime connects them. That is useful for setup, but
+            weak as an architecture.
+          </p>
+<p>
+            Models and tools will change. The more durable questions are about authority:
+            who owns intent, who may mutate code, who verifies the result, who challenges
+            assumptions, what belongs in persistent memory, and what evidence is required
+            before the system may declare work complete.
+          </p>
+<blockquote>
+            If replacing a model or coding agent forces a redesign of the whole system,
+            the architecture is coupled to products rather than capabilities.
+          </blockquote>
+<p>
+            The system described here was inspired by recent work on long-running coding
+            agents, including Cursor's experiments with planners, workers, self-coordination,
+            continuous executors, and recursive planning. Their results reinforced a useful
+            idea: autonomy benefits from explicit ownership and bounded roles, while flat
+            coordination and overloaded agents create pathological behavior.<sup><a aria-label="Reference 1" class="ref-call" href="#ref-1">[1]</a></sup>
+</p>
+<p>
+            I treated that as a starting hypothesis and built a smaller local harness to
+            test the same family of principles under observable, reproducible conditions.
+          </p>
+</section>
+<section class="reveal" id="principles">
+<div class="section-label">02 — Durable principles</div>
+<h2>The products are adapters. These are the contracts.</h2>
+<div class="principles">
+<div class="principle"><div class="n">01</div><div class="title">Intent has one owner</div><div class="desc">Delegation distributes work, not accountability. One root role owns the user's objective until acceptance.</div></div>
+<div class="principle"><div class="n">02</div><div class="title">Planning and implementation are separate</div><div class="desc">A planner that also edits everything tends to collapse into a worker.</div></div>
+<div class="principle"><div class="n">03</div><div class="title">Workers are bounded</div><div class="desc">Each worker receives a narrow objective, scope, constraints, and completion condition.</div></div>
+<div class="principle"><div class="n">04</div><div class="title">Verification is authoritative</div><div class="desc">Worker self-report is evidence, not proof. Acceptance belongs to an independent verification step.</div></div>
+<div class="principle"><div class="n">05</div><div class="title">Challenge is different from implementation</div><div class="desc">An independent challenger should be free to disagree with the implementation path rather than continue it.</div></div>
+<div class="principle"><div class="n">06</div><div class="title">Memory is knowledge, not coordination</div><div class="desc">Persistent memory stores decisions, conventions, discoveries, and lessons—not locks, task queues, or worker status.</div></div>
+<div class="principle"><div class="n">07</div><div class="title">Project identity must be explicit</div><div class="desc">Long-lived tool processes may run from the wrong directory. Route state from the authoritative workspace.</div></div>
+<div class="principle"><div class="n">08</div><div class="title">Parallelism requires isolation</div><div class="desc">Independent mutation-capable workers need isolated workspaces or worktrees before results are integrated.</div></div>
+<div class="principle"><div class="n">09</div><div class="title">Observability is part of correctness</div><div class="desc">A system should be able to reconstruct who acted, with which permissions, on which workspace, and with what result.</div></div>
+<div class="principle"><div class="n">10</div><div class="title">Policies should become invariants</div><div class="desc">Natural-language constraints are useful, but cardinality, mutability, and approval boundaries eventually need runtime enforcement.</div></div>
+<div class="principle"><div class="n">11</div><div class="title">Failure should degrade capability, not assurance silently</div><div class="desc">Quota exhaustion, provider failure, tool denial, and memory outages are normal operating conditions.</div></div>
+<div class="principle"><div class="n">12</div><div class="title">Completion requires evidence</div><div class="desc">“Done” should be a verified state transition, not a confidence statement from a child agent.</div></div>
+</div>
+</section>
+<section class="reveal" id="architecture">
+<div class="section-label">03 — Architecture</div>
+<h2>A small number of roles with clear authority.</h2>
+<div class="diagram wide">
+<div class="diagram-label">Capability graph</div>
+<pre class="mermaid">
+flowchart TD
+    H[Human / Goal Owner] --&gt; R[Root Planner]
+    R --&gt;|complex scope| P[Subplanner]
+    R --&gt;|bounded task| W[Implementation Worker]
+    P --&gt; W
+    R --&gt; V[Authoritative Verifier]
+    R --&gt;|independent review| C[Challenger]
+    R &lt;--&gt; M[(Durable Memory)]
+    W --&gt; G[(Repository)]
+    V --&gt; G
+            </pre>
+</div>
+<h3>Root planner</h3>
+<p>
+            Owns the user's intent, global decomposition, routing, integration decisions,
+            final acceptance, and durable-memory lifecycle. It should understand enough of
+            the repository to make good decisions, but routine implementation belongs elsewhere.
+          </p>
+<h3>Subplanner</h3>
+<p>
+            Owns one bounded domain. It decomposes that scope further when necessary and
+            hands precise tasks to workers. Recursive planning is allowed, but the hierarchy
+            should remain as shallow as the task permits.
+          </p>
+<h3>Implementation worker</h3>
+<p>
+            Owns one scoped code change. It may inspect, edit, and run local checks according
+            to its permissions, then returns a concise handoff. It does not own final acceptance.
+          </p>
+<h3>Verifier and challenger</h3>
+<p>
+            Verification proves that acceptance criteria are satisfied. Challenge is a separate
+            assurance function: an independent reasoning path looks for defects, missed requirements,
+            or unnecessary changes. Model diversity can help here, but diversity is a tactic rather
+            than the architectural principle.
+          </p>
+<h3>Durable memory</h3>
+<p>
+            Memory stores project knowledge that should survive sessions: architecture decisions,
+            stable conventions, recurring problems, important discoveries, and reusable lessons.
+            Runtime coordination remains outside memory.
+          </p>
+<div class="diagram wide">
+<div class="diagram-label">Control loop</div>
+<pre class="mermaid">
+flowchart TD
+    A[Understand] --&gt; B[Plan]
+    B --&gt; C[Delegate]
+    C --&gt; D[Implement]
+    D --&gt; E[Verify]
+    E --&gt;|failed| F[Rework]
+    F --&gt; C
+    E --&gt;|passed| G[Challenge]
+    G --&gt;|defect| F
+    G --&gt;|accepted| H[Remember]
+    H --&gt; I[Complete]
+            </pre>
+</div>
+</section>
+<section class="reveal" id="implementation">
+<div class="section-label">04 — Reference implementation</div>
+<h2>One concrete stack, explicitly treated as temporary.</h2>
+<p>
+            The first validated implementation was built on Windows in September 2026.
+            Its purpose is to make the principles executable, not to define the architecture
+            in terms of any one vendor.
+          </p>
+<div class="table-wrap wide">
+<table class="reference-table"><caption>Reference implementation adapters and their architectural requirements</caption>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Reference adapter</th>
+<th>Architectural requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr><td data-label="Capability">Orchestration runtime</td><td data-label="Reference adapter">DeepSeek Harness (DSH)</td><td data-label="Architectural requirement">Scoped tools, child agents, model routing, traceable delegation</td></tr>
+<tr><td data-label="Capability">Root planner</td><td data-label="Reference adapter">Claude Opus 5</td><td data-label="Architectural requirement">A strong planning/reasoning model</td></tr>
+<tr><td data-label="Capability">Subplanner</td><td data-label="Reference adapter">Claude Sonnet 5</td><td data-label="Architectural requirement">A cheaper/faster bounded planner</td></tr>
+<tr><td data-label="Capability">Implementation worker</td><td data-label="Reference adapter">Claude Code</td><td data-label="Architectural requirement">A repository-aware coding worker with bounded mutation</td></tr>
+<tr><td data-label="Capability">Challenger</td><td data-label="Reference adapter">Codex</td><td data-label="Architectural requirement">An independent reviewer with meaningfully different failure modes</td></tr>
+<tr><td data-label="Capability">Durable memory</td><td data-label="Reference adapter">Engram over MCP</td><td data-label="Architectural requirement">Persistent, searchable, project-scoped memory</td></tr>
+<tr><td data-label="Capability">Verification</td><td data-label="Reference adapter">Root + Git + PowerShell + project tests</td><td data-label="Architectural requirement">An authoritative acceptance path</td></tr>
+</tbody>
+</table>
+</div>
+<div class="note">
+<strong>Tested environment.</strong> Windows PowerShell, DSH 0.1.5-rc.1 and Engram 1.20.0.
+            The configuration below is an implementation snapshot, not part of the vendor-neutral contract.
+          </div>
+<h3>A vendor-neutral role contract</h3>
+<div class="code-block">
+<button aria-label="Copy code block 1" class="copy" type="button">Copy</button>
+<pre><code>roles:
+  root_planner:
+    owns: [intent, decomposition, routing, acceptance, durable_memory]
+    mutates_code: false
+
+  subplanner:
+    owns: [bounded_domain, decomposition]
+    mutates_code: false
+
+  worker:
+    owns: [bounded_implementation]
+    final_acceptance: false
+
+  verifier:
+    owns: [acceptance_evidence]
+    trusts_worker_claims: false
+
+  challenger:
+    owns: [independent_review]
+    mutates_reviewed_work: false
+
+memory:
+  stores: [decisions, conventions, discoveries, reusable_lessons]
+  never_stores: [locks, worker_status, transient_todos]</code></pre>
+</div>
+<h3>The current root model adapter</h3>
+<div class="code-block">
+<button aria-label="Copy code block 2" class="copy" type="button">Copy</button>
+<pre><code>agent-default-model:
+  provider: anthropic
+  model: claude-opus-5
+  reasoningEffort: high</code></pre>
+</div>
+<h3>The current memory adapter</h3>
+<div class="code-block">
+<button aria-label="Copy code block 3" class="copy" type="button">Copy</button>
+<pre><code>- insert:
+    - id: mcp-engram
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: engram
+        transport: stdio
+        command: engram
+        args:
+          - mcp
+          - --tools=agent
+        toolCallTimeoutMs: 60000
+        failOnStartupError: true</code></pre>
+</div>
+<p>
+            The memory adapter intentionally does not hard-code a project name.
+            Project identity is established by the root from the active workspace at session start.
+          </p>
+<div class="diagram wide diagram-native-viewbox">
+<div class="diagram-label">Project-scoped memory</div>
+<pre class="mermaid">
+sequenceDiagram
+    participant R as Root Planner
+    participant W as Active Workspace
+    participant M as Memory Service
+
+    R-&gt;&gt;W: read authoritative cwd
+    R-&gt;&gt;M: start_session(directory = cwd)
+    M--&gt;&gt;R: project + session identity
+    R-&gt;&gt;M: search/save under that identity
+
+    Note over R,M: New conversation
+
+    R-&gt;&gt;W: read authoritative cwd
+    R-&gt;&gt;M: start_session(directory = cwd)
+    M--&gt;&gt;R: same project identity
+    R-&gt;&gt;M: retrieve durable memory
+            </pre>
+</div>
+</section>
+<section class="reveal" id="validation">
+<div class="section-label">05 — Validation</div>
+<h2>The first test was intentionally trivial.</h2>
+<p>
+            The repository contained a small JavaScript function and one baseline test.
+            The harness was asked to add <code>safeDivide(a, b)</code>, throw on division by zero,
+            add exactly three tests, introduce no dependencies, and make no unrelated changes.
+          </p>
+<p>
+            The task itself was not the experiment. The orchestration path was.
+          </p>
+<div class="diagram wide">
+<div class="diagram-label">Validated execution path</div>
+<pre class="mermaid">
+flowchart TD
+    R[Root Planner] --&gt; P[One Subplanner]
+    P --&gt; W[Implementation Worker]
+    W --&gt; R
+    R --&gt; V[Root Verification]
+    R --&gt; C[Independent Challenger]
+    R --&gt; M[Durable Memory]
+            </pre>
+</div>
+<div class="table-wrap wide">
+<table class="validation-table"><caption>End-to-end validation results</caption>
+<thead>
+<tr><th>Component</th><th>Result</th><th>Observed evidence</th></tr>
+</thead>
+<tbody>
+<tr><td data-label="Component">Root planner</td><td class="status" data-label="Result">PASS</td><td data-label="Evidence">Owned the objective and performed final verification</td></tr>
+<tr><td data-label="Component">Subplanner</td><td class="status" data-label="Result">PASS · deviation</td><td data-label="Evidence">Decomposed and delegated; also spawned one extra verification worker</td></tr>
+<tr><td data-label="Component">Implementation worker</td><td class="status" data-label="Result">PASS</td><td data-label="Evidence">Produced the intended scoped diff</td></tr>
+<tr><td data-label="Component">Independent challenger</td><td class="status" data-label="Result">PASS</td><td data-label="Evidence">Reviewed independently and found no defect</td></tr>
+<tr><td data-label="Component">Memory routing</td><td class="status" data-label="Result">PASS</td><td data-label="Evidence">Explicit workspace resolved to the intended git root</td></tr>
+<tr><td data-label="Component">Memory write</td><td class="status" data-label="Result">PASS</td><td data-label="Evidence">A durable project convention was stored</td></tr>
+<tr><td data-label="Component">Cross-session recall</td><td class="status" data-label="Result">PASS</td><td data-label="Evidence">A new conversation recovered the prior convention without reading files</td></tr>
+<tr><td data-label="Component">Root test verification</td><td class="status" data-label="Result">PASS</td><td data-label="Evidence"><code>npm test</code> passed at the authoritative root level</td></tr>
+</tbody>
+</table>
+</div>
+<h3>Repository result</h3>
+<div class="code-block">
+<button aria-label="Copy code block 4" class="copy" type="button">Copy</button>
+<pre><code>src/math.js | 7 +++++++
+test.js     | 6 +++++-
+2 files changed, 12 insertions(+), 1 deletion(-)</code></pre>
+</div>
+<p>No dependency changes. No unrelated files. Root-level tests passed.</p>
+<h3>Cross-session memory</h3>
+<p>
+            A completely new conversation initialized memory from the same workspace and
+            recovered the project's testing and zero-dependency convention without repository
+            inspection, shell access, or delegation.
+          </p>
+<div class="diagram wide">
+<div class="diagram-label">Persistence across conversations</div>
+<pre class="mermaid">
+flowchart LR
+    A[Session A] --&gt; S[Save durable convention]
+    S --&gt; DB[(Persistent Memory)]
+    DB --&gt; B[Session B]
+    B --&gt; R[Recall same project convention]
+            </pre>
+</div>
+</section>
+<section class="reveal" id="findings">
+<div class="section-label">06 — Findings</div>
+<h2>The imperfections were more useful than a clean demo.</h2>
+<div class="finding">
+<div class="finding-head"><span class="finding-num">01</span><span class="finding-title">Prompt policy is not structural policy</span></div>
+<p>The run requested exactly one implementation worker. The subplanner still created another worker for verification.</p>
+<p><strong>Implication:</strong> worker cardinality and role permissions should become runtime-enforced invariants.</p>
+</div>
+<div class="finding">
+<div class="finding-head"><span class="finding-num">02</span><span class="finding-title">Worker verification was not authoritative</span></div>
+<p>An unattended coding worker could edit files but hit an approval boundary when attempting to run the test command.</p>
+<p><strong>Implication:</strong> final acceptance should remain with a trusted verifier until worker execution policy is strong enough.</p>
+</div>
+<div class="finding">
+<div class="finding-head"><span class="finding-num">03</span><span class="finding-title">One-shot children were not fully visible in one view</span></div>
+<p>After completion, the continuable-agent list contained no one-shot children. Run records were needed to reconstruct participation.</p>
+<p><strong>Implication:</strong> lineage requires a durable trace plane, not only live-agent state.</p>
+</div>
+<div class="finding">
+<div class="finding-head"><span class="finding-num">04</span><span class="finding-title">The memory process cwd was not the active project</span></div>
+<p>Implicit project detection could resolve the harness repository instead of the current workspace.</p>
+<p><strong>Implication:</strong> session/project identity must be established explicitly from authoritative workspace context.</p>
+</div>
+<div class="finding">
+<div class="finding-head"><span class="finding-num">05</span><span class="finding-title">Provider limits are part of normal operation</span></div>
+<p>An earlier dry run reached the independent reviewer's quota while the rest of the hierarchy completed successfully.</p>
+<p><strong>Implication:</strong> the system needs graceful degradation and an explicit reduction in assurance when a role is unavailable.</p>
+</div>
+<div class="finding">
+<div class="finding-head"><span class="finding-num">06</span><span class="finding-title">Memory metadata can disagree with session routing</span></div>
+<p>Session routing and search resolved the correct repository while one direct observation lookup surfaced inconsistent project metadata.</p>
+<p><strong>Implication:</strong> project-identity assertions belong in memory integrity checks.</p>
+</div>
+</section>
+<section class="reveal" id="roadmap">
+<div class="section-label">07 — Research roadmap</div>
+<h2>The goal is to earn stronger claims, not add more agents.</h2>
+<div class="roadmap">
+<div class="roadmap-item"><div class="version">V0.2</div><div><h3>Role conformance</h3><p>Move mutability, reviewer immutability, worker limits, and authority boundaries from prompts into runtime policy.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.3</div><div><h3>Multi-project memory isolation</h3><p>Test several repositories, overlapping terms, renames, remotes, monorepos, and ambiguous project resolution.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.4</div><div><h3>Failure recovery</h3><p>Inject provider outages, quota exhaustion, timeouts, malformed child output, shell denial, test failure, and memory outages.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.5</div><div><h3>Parallel isolated workers</h3><p>Use Git worktrees or equivalent isolation and measure speedup, conflicts, duplicated work, integration errors, and token overhead.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.6</div><div><h3>Routing policy</h3><p>Measure when a default worker, stronger worker, or model-diverse challenger improves outcome enough to justify its cost.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.7</div><div><h3>Single strong agent vs hierarchy</h3><p>Run the same 20+ task corpus under both conditions and compare correctness, time, tokens, retries, defects, and human intervention.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.8</div><div><h3>Long-horizon engineering</h3><p>Test multi-hour work, context compaction, interruptions, resume, evolving requirements, and intent drift.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.9</div><div><h3>Completion correctness</h3><p>Turn “done” into a machine-checkable acceptance state with negative tests and incomplete-implementation traps.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.10</div><div><h3>Adversarial security</h3><p>Red-team repository prompt injection, memory poisoning, secret exfiltration, malicious MCP output, destructive commands, and supply-chain attacks.</p></div></div>
+<div class="roadmap-item"><div class="version">V1.0+</div><div><h3>Autonomous security engineering</h3><p>Apply the same role contracts to vulnerability validation, detection engineering, DFIR, BAS, and incident-response automation.</p></div></div>
+</div>
+<h3>Metrics that should become first-class</h3>
+<ul class="metrics">
+<li>task success</li>
+<li>acceptance criteria satisfied</li>
+<li>tests passed</li>
+<li>defects found after completion</li>
+<li>unrelated file changes</li>
+<li>delegation count</li>
+<li>role violations</li>
+<li>retry count</li>
+<li>root interventions</li>
+<li>human interventions</li>
+<li>wall-clock time</li>
+<li>token usage</li>
+<li>provider cost</li>
+<li>parallel speedup</li>
+<li>merge conflicts</li>
+<li>memory routing accuracy</li>
+<li>memory retrieval precision</li>
+<li>cross-project leakage</li>
+<li>lineage completeness</li>
+<li>rollback success</li>
+</ul>
+<blockquote>
+            The experiment that matters most is simple: does hierarchical orchestration
+            actually outperform one strong agent on a repeatable task corpus?
+          </blockquote>
+<p>
+            Until that A/B test exists, hierarchy is a plausible engineering architecture,
+            not a performance claim.
+          </p>
+</section>
+<section class="reveal" id="claim">
+<div class="section-label">08 — Current claim</div>
+<h2>What V0.1 proves, and what it does not.</h2>
+<p>
+            V0.1 does not prove that hierarchy is cheaper, faster, or more correct than a
+            single strong agent. It does not establish long-horizon reliability, adversarial
+            robustness, or safe autonomous deployment.
+          </p>
+<p>
+            It does establish a working control loop: planning can be separated from implementation;
+            implementation can be independently verified; a model-diverse challenger can review the
+            result; durable project memory can survive conversations; and failure modes can be observed
+            precisely enough to become the next set of experiments.
+          </p>
+</section>
+<section class="reveal" id="references">
+<div class="section-label">09 — References</div>
+<h2>Current tools, durable ideas.</h2>
+<ol class="refs">
+<li><a href="https://cursor.com/blog/self-driving-codebases" rel="noopener noreferrer" target="_blank">Cursor — Towards self-driving codebases</a></li>
+<li><a href="https://github.com/deepseek-ai/deepseek-harness" rel="noopener noreferrer" target="_blank">DeepSeek Harness</a></li>
+<li><a href="https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/subagent/subagent/README.md" rel="noopener noreferrer" target="_blank">DSH subagent architecture</a></li>
+<li><a href="https://code.claude.com/docs/en/headless" rel="noopener noreferrer" target="_blank">Claude Code — programmatic execution</a></li>
+<li><a href="https://openai.com/index/unlocking-the-codex-harness/" rel="noopener noreferrer" target="_blank">OpenAI — Codex harness interfaces</a></li>
+<li><a href="https://github.com/Gentleman-Programming/engram" rel="noopener noreferrer" target="_blank">Engram persistent memory</a></li>
+<li><a href="https://github.com/Gentleman-Programming/engram/blob/main/DOCS.md" rel="noopener noreferrer" target="_blank">Engram technical reference</a></li>
+</ol>
+<div class="note">
+            Version-specific behavior will change. That is the point of separating
+            architecture from adapters.
+          </div>
+</section>
+</div>
+</main>
+</div>
+<footer>
+<div class="footer-inner"><span class="footer-copy">Sergio Mazariego — security engineering, software architecture, applied AI, and research notes.</span></div>
+</footer>
+<script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'dark',
+      securityLevel: 'loose',
+      themeVariables: {
+        background: '#0c0a0f',
+        primaryColor: '#100d14',
+        primaryTextColor: '#f5f3f7',
+        primaryBorderColor: '#5a296f',
+        lineColor: '#79558a',
+        secondaryColor: '#0c0a0f',
+        tertiaryColor: '#080709',
+        clusterBkg: '#0c0a0f',
+        clusterBorder: '#352a3d',
+        edgeLabelBackground: '#0c0a0f',
+        fontFamily: 'Inter, system-ui, sans-serif',
+        fontSize: '14px'
+      },
+      flowchart: {
+        curve: 'basis',
+        padding: 14,
+        useMaxWidth: true,
+        htmlLabels: true
+      },
+      sequence: {
+        useMaxWidth: true,
+        actorBkg: '#100d14',
+        actorBorder: '#5a296f',
+        actorTextColor: '#f5f3f7',
+        signalColor: '#b8a2c2',
+        signalTextColor: '#dcd4df',
+        noteBkgColor: '#151019',
+        noteBorderColor: '#5a296f',
+        noteTextColor: '#ded5e2'
+      }
+    });
+
+    await mermaid.run({ querySelector: '.mermaid' });
+
+    const cropAndScaleDiagrams = () => {
+      const desktop = window.innerWidth > 760;
+
+      document.querySelectorAll('.diagram').forEach((diagram) => {
+        const host = diagram.querySelector('.mermaid');
+        const svg = diagram.querySelector('svg');
+        if (!host || !svg) return;
+
+        host.style.display = 'grid';
+        host.style.placeItems = 'center';
+        host.style.width = '100%';
+        host.style.marginInline = 'auto';
+
+        svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+        svg.style.display = 'block';
+        svg.style.float = 'none';
+        svg.style.marginInline = 'auto';
+        svg.style.height = 'auto';
+
+        // Sequence diagrams can draw actor boxes, notes and lifelines outside
+        // Mermaid's first content group. Cropping to getBBox() can therefore
+        // cut valid content. Keep Mermaid's original viewBox for these.
+        if (diagram.classList.contains('diagram-native-viewbox')) {
+          svg.style.setProperty('width', desktop ? 'min(100%, 820px)' : '100%', 'important');
+          svg.style.setProperty('max-width', '100%', 'important');
+          svg.style.setProperty('overflow', 'visible', 'important');
+          return;
+        }
+
+        const content =
+          svg.querySelector('g.root') ||
+          svg.querySelector('g.output') ||
+          svg.querySelector(':scope > g') ||
+          svg.querySelector('g');
+
+        if (content && typeof content.getBBox === 'function') {
+          try {
+            const box = content.getBBox();
+            if (box.width > 0 && box.height > 0) {
+              const pad = 20;
+              const w = box.width + pad * 2;
+              const h = box.height + pad * 2;
+              svg.setAttribute('viewBox', `${box.x - pad} ${box.y - pad} ${w} ${h}`);
+              svg.removeAttribute('width');
+              svg.removeAttribute('height');
+
+              if (desktop) {
+                // One visual envelope for every diagram.
+                // Tall diagrams are constrained by height; wide ones by width.
+                const maxW = 780;
+                const maxH = 500;
+                const scale = Math.min(1, maxW / w, maxH / h);
+                const displayW = Math.max(1, Math.round(w * scale));
+
+                svg.style.setProperty('width', `${displayW}px`, 'important');
+                svg.style.setProperty('max-width', '100%', 'important');
+              } else {
+                svg.style.setProperty('width', '100%', 'important');
+                svg.style.setProperty('max-width', '100%', 'important');
+              }
+            }
+          } catch (_) {
+            svg.style.setProperty('max-width', '100%', 'important');
+          }
+        }
+      });
+    };
+
+    await new Promise((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(resolve))
+    );
+
+    cropAndScaleDiagrams();
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(cropAndScaleDiagrams, 120);
+    }, { passive: true });
+  </script>
+<script>
+    const progress = document.getElementById('progress');
+
+    const updateProgress = () => {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      progress.style.width = (height > 0 ? (scrollTop / height) * 100 : 0) + '%';
+    };
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08 });
+
+      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    } else {
+      document.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
+    }
+
+    const copyText = async (text) => {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      textarea.remove();
+    };
+
+    document.querySelectorAll('.copy').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const code = button.parentElement.querySelector('code');
+        if (!code) return;
+
+        try {
+          await copyText(code.innerText);
+          const original = button.textContent;
+          button.textContent = 'Copied';
+          setTimeout(() => button.textContent = original, 1000);
+        } catch (_) {
+          button.textContent = 'Copy failed';
+          setTimeout(() => button.textContent = 'Copy', 1200);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

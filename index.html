@@ -1,67 +1,1047 @@
-<!DOCTYPE html>
+<!doctype html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sergio Mazariego</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #1a1a1a; /* Negro */
-            color: #fff; /* Blanco */
-        }
-        .header {
-            background-color: #333333; /* Gris oscuro */
-            color: #fff;
-            text-align: center;
-            padding: 10px 0;
-        }
-        .circle {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background-color: #333333; /* Gris oscuro */
-            margin: 0 auto;
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .circle img {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 50%;
-        }
-        .info {
-            text-align: center;
-            padding: 20px;
-        }
-        .info p {
-            line-height: 1.5;
-            margin-bottom: 10px;
-        }
-        a {
-            color: #007bff; /* Azul */
-        }
-        a:hover {
-            color: #0056b3; /* Azul oscuro al pasar el ratón */
-        }
-    </style>
-</head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Sergio Mazariego — security engineering, software architecture, and intelligent systems." name="description"/>
+<meta content="#050505" name="theme-color"/>
+<meta content="Sergio Mazariego" property="og:title"/>
+<meta content="Security engineering, software architecture, and intelligent systems." property="og:description"/>
+<meta content="website" property="og:type"/>
+<title>Sergio Mazariego</title>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+    :root {
+      --bg: #050505;
+      --surface: #0c0a0f;
+      --surface-2: #100d14;
+      --text: #f5f3f7;
+      --body: #c9c4cd;
+      --muted: #aaa5b0;
+      --faint: #716b77;
+      --line: #252129;
+      --line-strong: #352a3d;
+      --purple: #5a296f;
+      --purple-2: #74428d;
+      --purple-faint: rgba(90, 41, 111, 0.09);
+
+      --page: 1120px;
+      --article: 760px;
+      --radius: 14px;
+      --topbar: 56px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      overflow-x: clip;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% -12%, rgba(90,41,111,.18), transparent 34rem),
+        linear-gradient(180deg, #070608 0, var(--bg) 29rem);
+      font-family:
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      font-size: 17px;
+      line-height: 1.68;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    ::selection {
+      color: #fff;
+      background: rgba(116,66,141,.52);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid #8c58a5;
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    .page {
+      width: min(calc(100% - 40px), var(--page));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      height: var(--topbar);
+      border-bottom: 1px solid rgba(255,255,255,.055);
+      background: rgba(5,5,5,.78);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .topbar-inner {
+      width: min(calc(100% - 40px), var(--page));
+      height: 100%;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .mark {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--purple-2);
+      box-shadow: 0 0 18px rgba(116,66,141,.66);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 12px;
+    }
+
+    .nav a {
+      color: var(--muted);
+      transition: color .2s ease;
+    }
+
+    .nav a:hover { color: #fff; }
+
+    .progress {
+      position: fixed;
+      top: var(--topbar);
+      left: 0;
+      z-index: 50;
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, #371543, #7a4890);
+      box-shadow: 0 0 10px rgba(116,66,141,.4);
+      pointer-events: none;
+    }
+
+    .hero {
+      min-height: calc(100svh - var(--topbar));
+      display: flex;
+      align-items: center;
+      padding: 92px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-inner {
+      width: min(100%, 980px);
+    }
+
+    .eyebrow {
+      margin-bottom: 25px;
+      color: #a277b5;
+      font-size: 11px;
+      font-weight: 680;
+      letter-spacing: .155em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 1030px;
+      margin: 0;
+      color: #fff;
+      font-size: clamp(48px, 7vw, 86px);
+      line-height: .96;
+      letter-spacing: -.056em;
+      font-weight: 650;
+      text-wrap: balance;
+    }
+
+    .hero-copy {
+      max-width: 730px;
+      margin: 31px 0 0;
+      color: #c5c0ca;
+      font-size: clamp(18px, 2vw, 22px);
+      line-height: 1.55;
+      letter-spacing: -.014em;
+      text-wrap: pretty;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+      margin-top: 38px;
+    }
+
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 560;
+    }
+
+    .text-link span {
+      transition: transform .2s ease;
+    }
+
+    .text-link:hover span {
+      transform: translateX(3px);
+    }
+
+    .secondary-link {
+      color: var(--muted);
+    }
+
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      border-top: 1px solid var(--line);
+    }
+
+    .service {
+      min-height: 220px;
+      padding: 28px 36px 30px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .service:nth-child(odd) {
+      padding-right: 42px;
+      border-right: 1px solid var(--line);
+    }
+
+    .service:nth-child(even) {
+      padding-left: 42px;
+    }
+
+    .service-index {
+      margin-bottom: 23px;
+      color: var(--faint);
+      font: 11px/1.5 ui-monospace, monospace;
+    }
+
+    .service h3 {
+      margin: 0 0 10px;
+      color: #fff;
+      font-size: 19px;
+      font-weight: 610;
+      letter-spacing: -.014em;
+    }
+
+    .service p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    section {
+      padding: 86px 0;
+      border-bottom: 1px solid var(--line);
+      scroll-margin-top: calc(var(--topbar) + 24px);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 190px minmax(0, 1fr);
+      gap: 42px;
+      margin-bottom: 42px;
+    }
+
+    .section-label {
+      padding-top: 6px;
+      color: #a277b5;
+      font-size: 11px;
+      font-weight: 680;
+      letter-spacing: .155em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      max-width: 720px;
+      margin: 0;
+      color: #fff;
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.08;
+      letter-spacing: -.036em;
+      font-weight: 620;
+      text-wrap: balance;
+    }
+
+    .work-list,
+    .writing-list,
+    .experience-list,
+    .research-list {
+      border-top: 1px solid var(--line);
+    }
+
+    .work-item,
+    .writing-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 64px minmax(0, 1.25fr) minmax(220px, .8fr) 24px;
+      gap: 26px;
+      align-items: start;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--line);
+      transition:
+        background .22s ease,
+        border-color .22s ease;
+    }
+
+    .work-item::before,
+    .writing-item::before {
+      content: "";
+      position: absolute;
+      inset: 0 -18px;
+      z-index: -1;
+      border-radius: 12px;
+      background: transparent;
+      transition: background .22s ease;
+    }
+
+    .work-item:hover::before,
+    .writing-item:hover::before {
+      background: rgba(90,41,111,.055);
+    }
+
+    .index {
+      color: var(--faint);
+      font: 11px/1.6 ui-monospace, monospace;
+    }
+
+    .item-title {
+      margin: 0 0 8px;
+      color: #fff;
+      font-size: 20px;
+      line-height: 1.25;
+      letter-spacing: -.016em;
+      font-weight: 610;
+    }
+
+    .item-copy {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.62;
+    }
+
+    .item-meta {
+      color: #8e8893;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .arrow {
+      color: #8f6aa2;
+      transition:
+        transform .22s ease,
+        color .22s ease;
+    }
+
+    .work-item:hover .arrow,
+    .writing-item:hover .arrow {
+      color: #fff;
+      transform: translateX(4px);
+    }
+
+    .section-cta {
+      margin-top: 28px;
+    }
+
+    .research-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+    }
+
+    .research-item {
+      padding: 26px 28px 26px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .research-item:nth-child(odd) {
+      padding-right: 36px;
+      border-right: 1px solid var(--line);
+    }
+
+    .research-item:nth-child(even) {
+      padding-left: 36px;
+    }
+
+    .research-item h3 {
+      margin: 0 0 8px;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 610;
+      letter-spacing: -.012em;
+    }
+
+    .research-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.62;
+    }
+
+    .writing-item {
+      grid-template-columns: 120px minmax(0, 1fr) 160px 24px;
+    }
+
+    .writing-date {
+      color: var(--faint);
+      font: 11px/1.6 ui-monospace, monospace;
+    }
+
+    .experience-item {
+      display: grid;
+      grid-template-columns: 170px minmax(0, 1fr) minmax(220px, .75fr);
+      gap: 28px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .experience-period {
+      color: var(--faint);
+      font: 11px/1.6 ui-monospace, monospace;
+    }
+
+    .experience-role {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 610;
+    }
+
+    .experience-org {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .principles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .principle {
+      min-height: 180px;
+      padding: 28px 34px 30px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .principle:nth-child(odd) {
+      padding-right: 42px;
+      border-right: 1px solid var(--line);
+    }
+
+    .principle:nth-child(even) {
+      padding-left: 42px;
+    }
+
+    .principle h3 {
+      margin: 0 0 10px;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 610;
+      letter-spacing: -.012em;
+    }
+
+    .principle p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(260px, .7fr);
+      gap: 72px;
+      align-items: start;
+    }
+
+    .about-copy {
+      color: #d3ced6;
+      font-size: 19px;
+      line-height: 1.7;
+    }
+
+    .about-copy p {
+      margin: 0 0 20px;
+    }
+
+    .about-meta {
+      border-top: 1px solid var(--line);
+    }
+
+    .about-row {
+      display: grid;
+      grid-template-columns: 92px minmax(0,1fr);
+      gap: 16px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+    .about-key { color: var(--faint); }
+    .about-value { color: var(--body); }
+
+    footer {
+      padding: 42px 0 calc(60px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 32px;
+      padding-top: 34px;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-name {
+      margin-bottom: 5px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 610;
+    }
+
+    .footer-copy {
+      max-width: 560px;
+      color: var(--faint);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 12px 18px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .footer-links a:hover { color: #fff; }
+
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(12px);
+      transition:
+        opacity .62s cubic-bezier(.2,.75,.2,1),
+        transform .62s cubic-bezier(.2,.75,.2,1);
+    }
+
+    .js .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      .section-head {
+        grid-template-columns: 145px minmax(0,1fr);
+        gap: 30px;
+      }
+
+      .work-item {
+        grid-template-columns: 48px minmax(0, 1fr) 220px 24px;
+        gap: 18px;
+      }
+
+      .writing-item {
+        grid-template-columns: 100px minmax(0, 1fr) 130px 24px;
+        gap: 18px;
+      }
+
+      .experience-item {
+        grid-template-columns: 130px minmax(0, 1fr) 180px;
+      }
+
+      .about-grid {
+        gap: 44px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      :root { --topbar: 52px; }
+
+      body {
+        font-size: 16px;
+      }
+
+      .page,
+      .topbar-inner {
+        width: calc(100% - 24px);
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 78px 0 64px;
+      }
+
+      h1 {
+        font-size: clamp(42px, 12vw, 62px);
+        line-height: .99;
+      }
+
+      .hero-copy {
+        margin-top: 25px;
+        font-size: 17px;
+      }
+
+      .hero-actions {
+        margin-top: 30px;
+      }
+
+      section {
+        padding: 62px 0;
+      }
+
+      .section-head {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 30px;
+      }
+
+      .section-title {
+        font-size: clamp(29px, 8vw, 38px);
+      }
+
+      .work-item,
+      .writing-item {
+        grid-template-columns: 34px minmax(0, 1fr) 18px;
+        gap: 12px;
+        padding: 22px 0;
+      }
+
+      .item-meta,
+      .writing-date {
+        grid-column: 2;
+      }
+
+      .work-item .arrow,
+      .writing-item .arrow {
+        grid-column: 3;
+        grid-row: 1;
+      }
+
+      .research-list,
+      .principles,
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .research-item,
+      .research-item:nth-child(odd),
+      .research-item:nth-child(even),
+      .principle,
+      .principle:nth-child(odd),
+      .principle:nth-child(even),
+      .service,
+      .service:nth-child(odd),
+      .service:nth-child(even) {
+        padding: 22px 0;
+        border-right: 0;
+      }
+
+      .principle,
+      .service {
+        min-height: 0;
+      }
+
+      .experience-item {
+        grid-template-columns: 1fr;
+        gap: 5px;
+        padding: 18px 0;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .about-copy {
+        font-size: 17px;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+
+      .footer-links {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .page,
+      .topbar-inner {
+        width: calc(100% - 20px);
+      }
+
+      .hero {
+        padding: 64px 0 54px;
+      }
+
+      h1 {
+        font-size: 40px;
+      }
+
+      .hero-actions {
+        gap: 10px 16px;
+      }
+
+      section {
+        padding: 54px 0;
+      }
+
+      .item-title {
+        font-size: 18px;
+      }
+
+      .work-item,
+      .writing-item {
+        grid-template-columns: 28px minmax(0, 1fr) 16px;
+        gap: 10px;
+      }
+
+      .about-row {
+        grid-template-columns: 78px minmax(0,1fr);
+      }
+    }
+
+    @media (max-width: 360px) {
+      .page,
+      .topbar-inner {
+        width: calc(100% - 16px);
+      }
+
+      h1 { font-size: 36px; }
+
+      .hero {
+        padding-top: 54px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+      }
+
+      .js .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  </style>
+<link href="https://sergiomazariego.com/" rel="canonical"/></head>
 <body>
-    <div class="header">
-        <h1>Sergio Mazariego</h1>
-    </div>
-    <div class="circle">
-        <img src="Sergio Mazariego.jpg" alt="Mi Foto">
-    </div>
-    <div class="info">
-        <p>I am a Computer Science Engineer with 3 years of IT experience, working full time in cybersecurity, doing mostly pentesting, digital forensics and incident response.</p>
-        <p>Additionally, I work part-time as a Cloud Engineer, utilizing AWS and Azure services to help clients build scalable applications and CI/CD pipelines with Cloud Native Services, GitHub Actions and Jenkins using DevOps principles.</p>
-        <p>I prioritize reliability by monitoring application performance with Grafana and DataDog and streamline infrastructure management with Terraform, Ansible, Docker and Kubernetes.</p>
-        <p>Feel free to check out my <a href="https://www.linkedin.com/in/sergiomazariego/">certifications</a> on LinkedIn and explore my <a href="https://medium.com/@sergiomazariego">blog</a> and <a href="https://www.youtube.com/@sergiomazariego_">YouTube channel</a> for Cybersecurity and Cloud Technologies content.</p>
-    </div>
+<div class="progress" id="progress"></div>
+<header class="topbar">
+<div class="topbar-inner">
+<a aria-label="Sergio Mazariego home" class="brand" href="#top">
+<span class="mark"></span>
+<span>Sergio Mazariego</span>
+</a>
+<nav aria-label="Primary navigation" class="nav">
+<a href="#services">Services</a>
+<a href="#work">Work</a>
+<a href="#research">Research</a>
+<a href="#writing">Writing</a>
+<a href="#experience">Experience</a>
+<a href="#about">About</a>
+</nav>
+</div>
+</header>
+<main id="top">
+<section class="hero">
+<div class="page">
+<div class="hero-inner">
+<div class="eyebrow reveal">Security engineering · Software architecture · Applied AI</div>
+<h1 class="reveal">
+            Security engineering, software architecture, and intelligent systems.
+          </h1>
+<p class="hero-copy reveal">
+            I work across DFIR, red teaming, penetration testing, security engineering, software architecture, and applied AI—building systems that make complex technical work repeatable, observable, and increasingly autonomous.
+          </p>
+<div class="hero-actions reveal">
+<a class="text-link" href="#services">Security services <span>→</span></a>
+<a class="text-link secondary-link" href="/blog/">Writing <span>→</span></a>
+</div>
+</div>
+</div>
+</section>
+<section id="services">
+<div class="page">
+<div class="section-head reveal">
+<div class="section-label">Security services</div>
+<h2 class="section-title">Hands-on cybersecurity work, from assessment through response.</h2>
+</div>
+<div class="services-grid reveal">
+<div class="service">
+<div class="service-index">01</div>
+<h3>DFIR &amp; Incident Response</h3>
+<p>Digital forensics, endpoint evidence collection, incident triage, investigation, containment support, and response workflow engineering.</p>
+</div>
+<div class="service">
+<div class="service-index">02</div>
+<h3>Red Teaming &amp; Adversarial Simulation</h3>
+<p>Adversary emulation, breach-and-attack simulation, attack-path validation, and exercises designed to produce actionable defensive feedback.</p>
+</div>
+<div class="service">
+<div class="service-index">03</div>
+<h3>Penetration Testing</h3>
+<p>Security assessment and vulnerability validation across applications, APIs, infrastructure, and common enterprise attack surfaces.</p>
+</div>
+<div class="service">
+<div class="service-index">04</div>
+<h3>Security Engineering &amp; Automation</h3>
+<p>Detection engineering, security tooling, SOC automation, investigation workflows, and software that reduces repetitive operational work.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="work">
+<div class="page">
+<div class="section-head reveal">
+<div class="section-label">Selected work</div>
+<h2 class="section-title">Systems built around operational reality.</h2>
+</div>
+<div class="work-list reveal"><a class="work-item" href="/blog/from-coding-agents-to-engineering-systems/"><div class="index">01</div><div><h3 class="item-title">Agentic Engineering Harness</h3><p class="item-copy">A validated hierarchical architecture for planning, implementation, verification, independent challenge, persistent memory, and evaluation.</p></div><div class="item-meta">Agent systems · Evaluation · Architecture</div><div class="arrow">→</div></a><a class="work-item" href="https://github.com/SergioMazariego/Mantis" rel="noopener noreferrer" target="_blank"><div class="index">02</div><div><h3 class="item-title">Mantis</h3><p class="item-copy">A public DFIR-focused project for rapid Windows evidence collection and endpoint investigation workflows.</p></div><div class="item-meta">DFIR · Security tooling · Go</div><div class="arrow">→</div></a></div>
+
+</div>
+</section>
+<section id="research">
+<div class="page">
+<div class="section-head reveal">
+<div class="section-label">Current research</div>
+<h2 class="section-title">Questions worth testing, not just discussing.</h2>
+</div>
+<div class="research-list reveal">
+<div class="research-item">
+<h3>Agent orchestration</h3>
+<p>How should planners, workers, verifiers, challengers, and memory interact?</p>
+</div>
+<div class="research-item">
+<h3>Persistent memory</h3>
+<p>What knowledge should survive between autonomous engineering sessions?</p>
+</div>
+<div class="research-item">
+<h3>Evaluation</h3>
+<p>When does hierarchy actually outperform a strong single agent?</p>
+</div>
+<div class="research-item">
+<h3>Resilience</h3>
+<p>How should the system degrade when providers, tools, workers, or memory fail?</p>
+</div>
+<div class="research-item">
+<h3>Adversarial security</h3>
+<p>How should autonomous engineering systems behave when inputs are actively hostile?</p>
+</div>
+<div class="research-item">
+<h3>Autonomous security engineering</h3>
+<p>Which orchestration principles survive the move from coding into security operations?</p>
+</div>
+</div>
+</div>
+</section>
+<section id="writing">
+<div class="page">
+<div class="section-head reveal">
+<div class="section-label">Writing</div>
+<h2 class="section-title">Notes from building and testing systems.</h2>
+</div>
+<div class="writing-list reveal">
+<a class="writing-item" href="/blog/from-coding-agents-to-engineering-systems/">
+<div class="writing-date">12 Sep 2026</div>
+<div>
+<h3 class="item-title">From Coding Agents to Engineering Systems</h3>
+<p class="item-copy">
+                A vendor-agnostic architecture for planning, implementation,
+                verification, memory, and evaluation in agentic software engineering.
+              </p>
+</div>
+<div class="item-meta">Agent systems · Research note</div>
+<div class="arrow">→</div>
+</a>
+</div>
+<div class="section-cta reveal">
+<a class="text-link secondary-link" href="/blog/">View all writing <span>→</span></a>
+</div>
+</div>
+</section>
+<section id="experience">
+<div class="page">
+<div class="section-head reveal">
+<div class="section-label">Experience</div>
+<h2 class="section-title">Security work evolving into systems engineering.</h2>
+</div>
+<div class="experience-list reveal">
+<div class="experience-item">
+<div class="experience-period">2025 — Present</div>
+<div class="experience-role">Adversarial Simulation, IR &amp; Detection Engineering Leader</div>
+<div class="experience-org">Devel Security</div>
+</div>
+<div class="experience-item">
+<div class="experience-period">2024 — 2025</div>
+<div class="experience-role">BAS &amp; Incident Response Leader</div>
+<div class="experience-org">Security engineering</div>
+</div>
+<div class="experience-item">
+<div class="experience-period">2022 — 2024</div>
+<div class="experience-role">BAS &amp; DFIR Engineer</div>
+<div class="experience-org">Adversarial simulation · DFIR</div>
+</div>
+<div class="experience-item">
+<div class="experience-period">2021 — 2022</div>
+<div class="experience-role">Offensive Security Engineer</div>
+<div class="experience-org">Offensive security</div>
+</div>
+</div>
+</div>
+</section>
+<section id="principles">
+<div class="page">
+<div class="section-head reveal">
+<div class="section-label">Principles</div>
+<h2 class="section-title">How I approach technical systems.</h2>
+</div>
+<div class="principles reveal">
+<div class="principle">
+<h3>Automate judgment last.</h3>
+<p>Automate repeatable work first. Preserve human authority where uncertainty and consequence are high.</p>
+</div>
+<div class="principle">
+<h3>Observability is part of correctness.</h3>
+<p>A system that cannot explain what happened is difficult to operate, evaluate, or trust.</p>
+</div>
+<div class="principle">
+<h3>Architecture should survive tools.</h3>
+<p>Models, vendors, and frameworks change faster than the engineering principles connecting them.</p>
+</div>
+<div class="principle">
+<h3>Evidence over demos.</h3>
+<p>A system is not reliable because it worked once. Claims should be earned through repeatable evaluation.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="about">
+<div class="page">
+<div class="section-head reveal">
+<div class="section-label">About</div>
+<h2 class="section-title">Building where security, software, and AI meet.</h2>
+</div>
+<div class="about-grid reveal">
+<div class="about-copy">
+<p>
+              I’m a security engineer and software architect. My work sits between cybersecurity operations, software systems, automation, and applied AI.
+            </p>
+<p>
+              I’m particularly interested in turning expert workflows into systems
+              that are measurable, reproducible, and eventually autonomous.
+            </p>
+</div>
+<div class="about-meta">
+<div class="about-row">
+<div class="about-key">Focus</div>
+<div class="about-value">Security · Architecture · AI systems</div>
+</div>
+<div class="about-row">
+<div class="about-key">Writing</div>
+<div class="about-value"><a href="/blog/">Research notes →</a></div>
+</div>
+<div class="about-row">
+<div class="about-key">GitHub</div>
+<div class="about-value"><a href="https://github.com/SergioMazariego" rel="noopener noreferrer" target="_blank">@SergioMazariego →</a></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer>
+<div class="page">
+<div class="footer-grid">
+<div>
+<div class="footer-name">Sergio Mazariego</div>
+<div class="footer-copy">
+            Security engineering · Software architecture · Applied AI
+            <br/>
+            © 2026 Sergio Mazariego
+          </div>
+</div>
+<div class="footer-links"><a href="#services">Services</a>
+<a href="https://github.com/SergioMazariego" rel="noopener noreferrer" target="_blank">GitHub</a>
+<a href="/blog/">Writing</a>
+<a href="#about">About</a>
+</div>
+</div>
+</div>
+</footer>
+<script>
+    const progress = document.getElementById('progress');
+
+    const updateProgress = () => {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      progress.style.width = (height > 0 ? (scrollTop / height) * 100 : 0) + '%';
+    };
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08 });
+
+      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    } else {
+      document.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
+    }
+  </script>
 </body>
 </html>
