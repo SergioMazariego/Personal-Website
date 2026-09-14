@@ -778,7 +778,7 @@ flowchart LR
           </p>
 </section>
 <section id="claim">
-<h2>What V0.1 proves, and what it does not.</h2>
+<h2>What V0.1 proves, and where you can run it.</h2>
 <p>
             V0.1 does not prove that hierarchy is cheaper, faster, or more correct than a single
             strong agent. It does not establish long-horizon reliability, adversarial robustness,
@@ -799,6 +799,24 @@ flowchart LR
             hierarchy, scored on correctness, time, tokens, retries, and human interventions. If
             the hierarchy loses that comparison broadly, the extra roles are overhead dressed up
             as architecture, and I would say so.
+          </p>
+<p>
+            The part I care about is where this runs. Cursor validated the role model inside
+            their own product, at a scale and against a codebase nobody outside the company can
+            reach. That is a reasonable place to prove something and a bad place to learn from
+            it, because you cannot open it, instrument it, or change one role and rerun it. So
+            the contribution here is not the idea. It is the same idea assembled out of pieces
+            anyone can install: DSH as the orchestration runtime, subagents as the workers and
+            the challenger, an MCP memory server for what survives between sessions, and a
+            preset file that declares who is allowed to do what.
+          </p>
+<p>
+            Everything listed in section four is in the repository for that reason. Clone it,
+            point DSH at a project of your own, and you should have the same hierarchy running
+            in about an hour. Then change something. Swap the memory server, downgrade the root
+            model, delete the challenger and watch which findings get worse. Those are the
+            experiments I could not have run on someone else's stack, and they are the reason
+            this one is open.
           </p>
 <p>
             Right now I have one clean run, six real findings, and a repository anyone can clone
