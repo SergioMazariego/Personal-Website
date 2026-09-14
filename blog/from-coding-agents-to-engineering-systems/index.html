@@ -77,9 +77,9 @@
 </div>
 <h1>From Coding Agents to Engineering Systems</h1>
 <p class="dek">
-          A vendor-agnostic architecture for planning, implementation, verification,
-          independent challenge, persistent memory, and evaluation in autonomous
-          software engineering systems.
+          Role contracts for planning, implementation, verification, independent challenge,
+          persistent memory, and evaluation in autonomous software engineering. The
+          principles are meant to port. My setup runs on DSH today, and it is published.
         </p>
 <p class="thesis">
           Planner decides. Worker implements. Verifier proves. Challenger attacks. Memory remembers.
@@ -95,7 +95,7 @@
 <li><a href="#validation"><span>06</span> End-to-end validation</a></li>
 <li><a href="#findings"><span>07</span> What failed and what it taught us</a></li>
 <li><a href="#roadmap"><span>08</span> Research roadmap</a></li>
-<li><a href="#claim"><span>09</span> What V0.1 proves</a></li>
+<li><a href="#claim"><span>09</span> What V0.1 proves, and how to port it</a></li>
 <li><a href="#references"><span>10</span> References</a></li>
 </ol>
 </div>
@@ -803,20 +803,44 @@ flowchart LR
 <p>
             The part I care about is where this runs. Cursor validated the role model inside
             their own product, at a scale and against a codebase nobody outside the company can
-            reach. That is a reasonable place to prove something and a bad place to learn from
-            it, because you cannot open it, instrument it, or change one role and rerun it. So
-            the contribution here is not the idea. It is the same idea assembled out of pieces
-            anyone can install: DSH as the orchestration runtime, subagents as the workers and
-            the challenger, an MCP memory server for what survives between sessions, and a
-            preset file that declares who is allowed to do what.
+            reach. That is a reasonable place to prove something and an awkward place to learn
+            from it, because you cannot open it, instrument it, or change one role and rerun
+            the same task. So what I am offering is not the idea. It is a working version of it
+            you can install today.
+          </p>
+<h3>My setup, if you want to copy it</h3>
+<p>
+            Today that means DSH. It is the orchestration runtime, its subagents are the
+            workers and the challenger, an MCP server holds what survives between sessions, and
+            a single preset file declares who is allowed to do what. Section four lists every
+            piece, and all of it sits in
+            <a href="https://github.com/SergioMazariego/agentic-engineering-harness" rel="noopener noreferrer" target="_blank">the harness repository</a>.
+            Clone it, point DSH at a project of your own, and you should have the same
+            hierarchy running in about an hour. Then change something. Swap the memory server,
+            downgrade the root model, delete the challenger and watch which findings get worse.
+          </p>
+<h3>If you want to build it with your own tools</h3>
+<p>
+            DSH is what I had, not what the architecture requires, and I would rather people
+            port these ideas than adopt my stack. Nothing in this post depends on a specific
+            runtime. What it depends on is a short list of properties, and any orchestrator
+            worth using can provide them.
           </p>
 <p>
-            Everything listed in section four is in the repository for that reason. Clone it,
-            point DSH at a project of your own, and you should have the same hierarchy running
-            in about an hour. Then change something. Swap the memory server, downgrade the root
-            model, delete the challenger and watch which findings get worse. Those are the
-            experiments I could not have run on someone else's stack, and they are the reason
-            this one is open.
+            You need one role that owns the objective and is the only one allowed to accept
+            completion. You need to be able to hand a worker a bounded task and get a structured
+            report back, without that worker being able to declare the job finished. You need
+            per-role tool permissions enforced by the runtime rather than requested in a prompt,
+            because section five is entirely about the difference. You need a place to put
+            durable project knowledge that is not the same place you put runtime coordination
+            state. And you need enough of a trace to reconstruct who did what afterwards, which
+            one-shot children will not give you for free.
+          </p>
+<p>
+            Build that on LangGraph, on a homegrown supervisor loop, on whatever ships next
+            year, and the twelve principles in section two should still apply. If you port it
+            and something in my findings does not reproduce on your stack, that is a more
+            interesting result than my clean run, and I would like to hear about it.
           </p>
 <p>
             Right now I have one clean run, six real findings, and a repository anyone can clone
