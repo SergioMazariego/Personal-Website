@@ -127,16 +127,21 @@
             the architecture is coupled to products rather than capabilities.
           </blockquote>
 <p>
-            The starting point for this project was Cursor's public writing on long-running
-            coding agents: planners, workers, self-coordination, continuous executors,
-            recursive planning.<sup><a aria-label="Reference 1" class="ref-call" href="#ref-1">[1]</a></sup>
-            I took one idea from it seriously: autonomy gets better with explicit ownership and
-            bounded roles, and worse with flat coordination and agents that accumulate authority
-            nobody assigned them. I did not take their implementation, scale, or "self-driving
-            codebases" framing as settled; it is a vendor's blog post written to sell a product,
-            directionally useful but not something I would trust without testing it myself. So I
-            built a much smaller version to see which parts survive once the product names
-            change.
+            The starting point for this project was Cursor's work on long-running coding
+            agents: planners, workers, self-coordination, continuous executors, recursive
+            planning.<sup><a aria-label="Reference 1" class="ref-call" href="#ref-1">[1]</a></sup>
+            The central idea holds up well: autonomy gets better with explicit ownership and
+            bounded roles, and worse with flat coordination and agents that accumulate
+            authority nobody assigned them. They are running it at a scale I have no way to
+            reproduce, against a codebase and a product surface I do not have.
+          </p>
+<p>
+            What I wanted was a version I could take apart. Cursor's implementation is theirs,
+            tied to their runtime, and reading about an architecture is not the same as
+            watching it fail in front of you. So I rebuilt the same role model on DSH, small
+            enough to run on one machine and open enough that anyone else can run it too.
+            Everything below is that reimplementation: which parts of the idea survive when
+            the product names change, and where my version broke.
           </p>
 </section>
 <section id="principles">
