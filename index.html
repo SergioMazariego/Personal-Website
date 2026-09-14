@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<meta content="Adversarial simulation, detection engineering, and DFIR for banks. Notes on agent systems and automation." name="description"/>
+<meta content="Sergio Mazariego leads adversarial simulation, detection engineering, and DFIR at Devel Security. This site is still being built; one article is up so far." name="description"/>
 <meta content="#050505" name="theme-color"/>
 <meta content="Sergio Mazariego" property="og:title"/>
-<meta content="Adversarial simulation, detection engineering, and DFIR for banks. Notes on agent systems and automation." property="og:description"/>
+<meta content="Sergio Mazariego leads adversarial simulation, detection engineering, and DFIR at Devel Security. This site is still being built; one article is up so far." property="og:description"/>
 <meta content="website" property="og:type"/>
 <meta content="https://sergiomazariego.com/" property="og:url"/>
 <meta content="Sergio Mazariego" property="og:site_name"/>
@@ -17,7 +17,7 @@
 <meta content="1200" property="og:image:height"/>
 <meta content="summary" name="twitter:card"/>
 <meta content="Sergio Mazariego" name="twitter:title"/>
-<meta content="Adversarial simulation, detection engineering, and DFIR for banks. Notes on agent systems and automation." name="twitter:description"/>
+<meta content="Sergio Mazariego leads adversarial simulation, detection engineering, and DFIR at Devel Security. This site is still being built; one article is up so far." name="twitter:description"/>
 <meta content="https://sergiomazariego.com/assets/img/sergio-mazariego.jpg" name="twitter:image"/>
 <meta content="Portrait of Sergio Mazariego" name="twitter:image:alt"/>
 <title>Sergio Mazariego</title>
@@ -46,208 +46,35 @@
 }
 </script>
 <style>
-  /* Page-specific rules only. Hero, section headings, and the work/writing
-     row pattern live in /assets/css/site.css because the blog listing page
-     reuses them too — see that file for the shared system. */
+  /* Page-specific: the section heading, writing row, and footer reuse the
+     shared system in /assets/css/site.css unchanged. This page needs two
+     rules of its own. */
 
-  /* Services */
-
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    border-top: 1px solid var(--line);
-  }
-
-  .service {
-    padding: 26px 36px 28px 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .service:nth-child(odd) {
-    padding-right: 42px;
-    border-right: 1px solid var(--line);
-  }
-
-  .service:nth-child(even) {
-    padding-left: 42px;
-  }
-
-  .service h3 {
-    margin: 0 0 10px;
-    color: #fff;
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: -.006em;
-  }
-
-  .service p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 14px;
-    line-height: 1.65;
-  }
-
-  /* Research */
-
-  .research-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .research-item {
-    padding: 24px 28px 24px 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .research-item:nth-child(odd) {
-    padding-right: 36px;
-    border-right: 1px solid var(--line);
-  }
-
-  .research-item:nth-child(even) {
-    padding-left: 36px;
-  }
-
-  .research-item h3 {
-    margin: 0 0 8px;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: -.006em;
-  }
-
-  .research-item p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 14px;
-    line-height: 1.62;
-  }
-
-  /* Experience */
-
-  .experience-item {
-    display: grid;
-    grid-template-columns: 150px minmax(0, 1fr) minmax(0, .75fr);
-    gap: 28px;
-    padding: 20px 0;
-    border-bottom: 1px solid var(--line);
-    min-width: 0;
-  }
-
-  .experience-period {
+  /* A small status label above the name, styled like the mono labels used
+     elsewhere on the site. */
+  .status-label {
+    margin-bottom: 14px;
     color: var(--faint);
     font-family: var(--font-mono);
     font-size: 12px;
-    line-height: 1.6;
+    letter-spacing: .04em;
   }
 
-  .experience-role {
-    color: #fff;
-    font-size: 15px;
-    font-weight: 600;
-  }
-
-  .experience-org {
-    color: var(--muted);
-    font-size: 14px;
-  }
-
-  /* About */
-
-  .about-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(240px, .7fr);
-    gap: 64px;
-    align-items: start;
-  }
-
-  .about-copy {
-    color: var(--body);
-    font-size: 17px;
-    line-height: 1.7;
-  }
-
-  .about-copy p {
-    margin: 0 0 18px;
-  }
-
-  .about-photo {
+  /* The shared .hero rule fills the viewport below the topbar and
+     vertically centers its content — right for the old full-length
+     portfolio homepage, wrong here. This page has one section after the
+     hero (a single article link), and a full-viewport hero pushes that
+     link below the fold on a laptop screen. Size the hero to its content
+     instead, the same fix /blog/ already applies to this shared rule. */
+  .hero {
+    min-height: auto;
     display: block;
-    width: 100%;
-    max-width: 200px;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    border: 1px solid var(--line);
-    border-radius: 3px;
-    margin-bottom: 22px;
-    filter: grayscale(1) contrast(1.05) brightness(.94);
-  }
-
-  .about-meta {
-    border-top: 1px solid var(--line);
-  }
-
-  .about-row {
-    display: grid;
-    grid-template-columns: 92px minmax(0, 1fr);
-    gap: 16px;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--line);
-    font-size: 13px;
-  }
-
-  .about-key {
-    color: var(--faint);
-    font-family: var(--font-mono);
-  }
-
-  .about-value {
-    color: var(--body);
-  }
-
-  .about-value a:hover {
-    color: #fff;
+    padding: 56px 0 24px;
   }
 
   @media (max-width: 760px) {
-    .service:nth-child(odd),
-    .research-item:nth-child(odd) {
-      border-right: 0;
-    }
-
-    .services-grid,
-    .research-list {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    .service,
-    .service:nth-child(odd),
-    .service:nth-child(even),
-    .research-item,
-    .research-item:nth-child(odd),
-    .research-item:nth-child(even) {
-      padding: 20px 0;
-    }
-
-    .experience-item {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 4px;
-      padding: 16px 0;
-    }
-
-    .about-grid {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 28px;
-    }
-
-    .about-photo {
-      max-width: 140px;
-    }
-  }
-
-  @media (max-width: 430px) {
-    .about-row {
-      grid-template-columns: 78px minmax(0, 1fr);
+    .hero {
+      padding: 40px 0 16px;
     }
   }
 </style>
@@ -255,120 +82,33 @@
 <body>
 <header class="topbar">
 <div class="topbar-inner">
-<a aria-label="Sergio Mazariego home" class="brand" href="#top">Sergio Mazariego</a>
+<a aria-label="Sergio Mazariego home" class="brand" href="/">Sergio Mazariego</a>
 <nav aria-label="Primary navigation" class="nav">
-<a href="#services">Services</a>
-<a href="#work">Work</a>
-<a href="#research">Research</a>
-<a href="#writing">Writing</a>
-<a href="#experience">Experience</a>
-<a href="#about">About</a>
+<a href="/blog/">Writing</a>
+<a href="https://github.com/SergioMazariego" rel="noopener noreferrer" target="_blank">GitHub</a>
+<a href="https://www.linkedin.com/in/sergiomazariego/" rel="noopener noreferrer" target="_blank">LinkedIn</a>
 </nav>
 </div>
 </header>
-<main id="top">
+<main>
 <section class="hero">
 <div class="page">
 <div class="hero-inner">
-<h1>I lead adversarial simulation and incident response for banks.</h1>
-<p class="hero-copy">
-At Devel Security I run a five-person team covering adversarial simulation, detection engineering, and digital forensics for banks across the region. We've handled more than 100 incidents in almost six years. I also lead the team's AI work: agent orchestration, internal tooling, automation.
-</p>
+<div class="status-label">SITE IN PROGRESS</div>
+<h1>Sergio Mazariego</h1>
+<p class="hero-copy">At Devel Security I lead a five-person team running adversarial simulation, detection engineering, and DFIR for banks across the region. We've closed more than 100 incidents since 2020, and I also lead the team's AI work: agent orchestration, internal tooling, automation.</p>
+<p class="hero-copy">The rest of this site isn't built yet. One article is finished, and it's below.</p>
 <div class="hero-actions">
-<a class="text-link" href="#services">What I do <span>→</span></a>
-<a class="text-link secondary-link" href="/blog/">Writing <span>→</span></a>
+<a class="text-link" href="https://github.com/SergioMazariego" rel="noopener noreferrer" target="_blank">GitHub <span>→</span></a>
+<a class="text-link secondary-link" href="https://www.linkedin.com/in/sergiomazariego/" rel="noopener noreferrer" target="_blank">LinkedIn <span>→</span></a>
 </div>
 </div>
 </div>
 </section>
-<section id="services">
+<section>
 <div class="page">
 <div class="section-head">
-<h2 class="section-title">What I lead at Devel Security.</h2>
-</div>
-<div class="services-grid">
-<div class="service">
-<h3>Adversarial Simulation</h3>
-<p>Adversary emulation and red team exercises mapped to MITRE ATT&amp;CK, run with Caldera, Atomic Red Team, Cobalt Strike, and Sliver.</p>
-</div>
-<div class="service">
-<h3>Detection Engineering</h3>
-<p>Detection logic built on Sigma rules and Sysmon telemetry, tuned across Splunk, Microsoft Sentinel, and Elastic, with Cortex XDR as the EDR.</p>
-</div>
-<div class="service">
-<h3>Digital Forensics &amp; Incident Response</h3>
-<p>Endpoint evidence collection and incident investigation using Velociraptor and KAPE. More than 100 incidents closed since 2020.</p>
-</div>
-<div class="service">
-<h3>AI &amp; Automation</h3>
-<p>Agent orchestration, internal tooling, and automation for the team, alongside the security work itself.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="work">
-<div class="page">
-<div class="section-head">
-<h2 class="section-title">The two projects I can show.</h2>
-<p class="section-dek">Most of the job is under NDA for banking clients. These two aren't.</p>
-</div>
-<div class="work-list">
-<a class="work-item" href="/blog/from-coding-agents-to-engineering-systems/">
-<div>
-<h3 class="item-title">Agentic Engineering Harness</h3>
-<p class="item-copy">A hierarchical architecture for planning, implementation, verification, independent challenge, memory, and evaluation in agentic software engineering.</p>
-</div>
-<div class="item-meta">Agent systems · Architecture</div>
-<div class="arrow">→</div>
-</a>
-<a class="work-item" href="https://github.com/SergioMazariego/Mantis" rel="noopener noreferrer" target="_blank">
-<div>
-<h3 class="item-title">Mantis</h3>
-<p class="item-copy">Windows forensics collector written in Go. Wraps Sysinternals and NirSoft utilities to pull running processes, TCP connections, autorun persistence, event logs, PowerShell history, and temp files into one artifacts folder. Needs admin rights.</p>
-</div>
-<div class="item-meta">Go · DFIR tooling</div>
-<div class="arrow">→</div>
-</a>
-</div>
-</div>
-</section>
-<section id="research">
-<div class="page">
-<div class="section-head">
-<h2 class="section-title">What I'm testing right now.</h2>
-</div>
-<div class="research-list">
-<div class="research-item">
-<h3>Agent orchestration</h3>
-<p>How should planners, workers, verifiers, challengers, and memory interact?</p>
-</div>
-<div class="research-item">
-<h3>Persistent memory</h3>
-<p>What should survive between one autonomous engineering session and the next?</p>
-</div>
-<div class="research-item">
-<h3>Evaluation</h3>
-<p>When does a hierarchy of agents actually beat one strong agent working alone?</p>
-</div>
-<div class="research-item">
-<h3>Resilience</h3>
-<p>How should the system degrade when a provider, tool, worker, or memory store fails?</p>
-</div>
-<div class="research-item">
-<h3>Adversarial security</h3>
-<p>How should an autonomous engineering system behave when its inputs are actively hostile?</p>
-</div>
-<div class="research-item">
-<h3>Autonomous security engineering</h3>
-<p>Which orchestration principles carry over from coding agents into security operations?</p>
-</div>
-</div>
-</div>
-</section>
-<section id="writing">
-<div class="page">
-<div class="section-head">
-<h2 class="section-title">Long-form notes, published rarely.</h2>
+<h2 class="section-title">One thing worth reading.</h2>
 </div>
 <div class="writing-list">
 <a class="writing-item" href="/blog/from-coding-agents-to-engineering-systems/">
@@ -379,72 +119,6 @@ At Devel Security I run a five-person team covering adversarial simulation, dete
 </div>
 <div class="arrow">→</div>
 </a>
-</div>
-<div class="section-cta">
-<a class="text-link secondary-link" href="/blog/">View all writing <span>→</span></a>
-</div>
-</div>
-</section>
-<section id="experience">
-<div class="page">
-<div class="section-head">
-<h2 class="section-title">Six years, four roles.</h2>
-</div>
-<div class="experience-list">
-<div class="experience-item">
-<div class="experience-period">2025 — Present</div>
-<div class="experience-role">Adversarial Simulation, IR &amp; Detection Engineering Leader</div>
-<div class="experience-org">Devel Security</div>
-</div>
-<div class="experience-item">
-<div class="experience-period">2024 — 2025</div>
-<div class="experience-role">BAS &amp; Incident Response Leader</div>
-<div class="experience-org">Security engineering</div>
-</div>
-<div class="experience-item">
-<div class="experience-period">2022 — 2024</div>
-<div class="experience-role">BAS &amp; DFIR Engineer</div>
-<div class="experience-org">Adversarial simulation · DFIR</div>
-</div>
-<div class="experience-item">
-<div class="experience-period">2020 — 2022</div>
-<div class="experience-role">Offensive Security Engineer</div>
-<div class="experience-org">Offensive security</div>
-</div>
-</div>
-</div>
-</section>
-<section id="about">
-<div class="page">
-<div class="section-head">
-<h2 class="section-title">Sergio Mazariego, in brief.</h2>
-</div>
-<div class="about-grid">
-<div class="about-copy">
-<p>I've spent almost six years in cybersecurity, starting in 2020, mostly around incident response, adversarial simulation, and detection engineering for banks.</p>
-<p>Outside client work, I build the tools the team actually uses: agent harnesses, automations, and small internal apps that cut repetitive investigation steps down.</p>
-</div>
-<div class="about-aside">
-<img alt="Portrait of Sergio Mazariego" class="about-photo" height="200" src="/assets/img/sergio-mazariego.jpg" width="200"/>
-<div class="about-meta">
-<div class="about-row">
-<div class="about-key">Role</div>
-<div class="about-value">Adversarial simulation, detection engineering, DFIR (Devel Security)</div>
-</div>
-<div class="about-row">
-<div class="about-key">Writing</div>
-<div class="about-value"><a href="/blog/">Research notes →</a></div>
-</div>
-<div class="about-row">
-<div class="about-key">GitHub</div>
-<div class="about-value"><a href="https://github.com/SergioMazariego" rel="noopener noreferrer" target="_blank">@SergioMazariego →</a></div>
-</div>
-<div class="about-row">
-<div class="about-key">LinkedIn</div>
-<div class="about-value"><a href="https://www.linkedin.com/in/sergiomazariego/" rel="noopener noreferrer" target="_blank">in/sergiomazariego →</a></div>
-</div>
-</div>
-</div>
 </div>
 </div>
 </section>
@@ -461,11 +135,9 @@ Adversarial simulation · Detection engineering · DFIR
 </div>
 </div>
 <div class="footer-links">
-<a href="#services">Services</a>
+<a href="/blog/">Writing</a>
 <a href="https://github.com/SergioMazariego" rel="noopener noreferrer" target="_blank">GitHub</a>
 <a href="https://www.linkedin.com/in/sergiomazariego/" rel="noopener noreferrer" target="_blank">LinkedIn</a>
-<a href="/blog/">Writing</a>
-<a href="#about">About</a>
 </div>
 </div>
 </div>

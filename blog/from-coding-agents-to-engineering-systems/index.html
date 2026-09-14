@@ -63,7 +63,7 @@
 <header class="topbar">
 <div class="topbar-inner">
 <a class="brand" href="/">Sergio Mazariego / Writing</a>
-<nav aria-label="Article navigation" class="nav"><a href="/">Home</a><a href="/blog/">Writing</a><a href="/#services">Services</a></nav>
+<nav aria-label="Article navigation" class="nav"><a href="/">Home</a><a href="/blog/">Writing</a></nav>
 </div>
 </header>
 <div class="page" id="top">
@@ -91,11 +91,12 @@
 <li><a href="#principles"><span>02</span> Durable principles</a></li>
 <li><a href="#architecture"><span>03</span> Capability architecture</a></li>
 <li><a href="#implementation"><span>04</span> 2026 reference implementation</a></li>
-<li><a href="#validation"><span>05</span> End-to-end validation</a></li>
-<li><a href="#findings"><span>06</span> What failed and what it taught us</a></li>
-<li><a href="#roadmap"><span>07</span> Research roadmap</a></li>
-<li><a href="#claim"><span>08</span> What V0.1 proves</a></li>
-<li><a href="#references"><span>09</span> References</a></li>
+<li><a href="#prompts"><span>05</span> Where authority actually lives</a></li>
+<li><a href="#validation"><span>06</span> End-to-end validation</a></li>
+<li><a href="#findings"><span>07</span> What failed and what it taught us</a></li>
+<li><a href="#roadmap"><span>08</span> Research roadmap</a></li>
+<li><a href="#claim"><span>09</span> What V0.1 proves</a></li>
+<li><a href="#references"><span>10</span> References</a></li>
 </ol>
 </div>
 </div>
@@ -105,49 +106,79 @@
 <section id="problem">
 <h2>Roles should survive the tools that implement them.</h2>
 <p class="lead">
-            Agentic coding systems are often described as a stack of product names:
-            one model plans, another coding tool edits, a memory server stores context,
-            and an orchestration runtime connects them. That is useful for setup, but
-            weak as an architecture.
+            I run detection engineering, adversarial simulation, and incident response for
+            a five-person team that works with banks across Central America. We have handled
+            more than a hundred incidents since 2020. None of that makes me an AI researcher.
+            It makes me someone who has spent a long time asking one plain question about any
+            system with privileged access: who is allowed to do what, and can you prove it
+            after the fact.
           </p>
 <p>
-            Models and tools will change. The more durable questions are about authority:
-            who owns intent, who may mutate code, who verifies the result, who challenges
-            assumptions, what belongs in persistent memory, and what evidence is required
-            before the system may declare work complete.
+            Sometime in 2026 that question started applying to coding agents too. The public
+            conversation about agentic software engineering settled into a stack of product
+            names: one model plans, another coding tool edits, a memory server stores context, an
+            orchestration runtime wires them together. Fine for a demo, but a weak foundation for
+            an architecture, because every name in that stack is a product decision, and product
+            decisions change on a vendor's release schedule, not yours.
+          </p>
+<p>
+            Models and coding tools will keep changing. What does not move as fast is authority:
+            who owns intent, who may mutate code, who verifies the result, who can challenge the
+            implementation path, what belongs in memory, and what evidence has to exist before
+            anything calls itself done. Those are the same questions I ask about a service
+            account or an EDR agent running with local admin. An automated process with write
+            access to a repository is, functionally, a privileged process, and in a bank's
+            network a privileged process nobody can name the owner of is a finding, not a
+            feature. I wanted coding agents held to that bar before trusting one near production
+            code.
           </p>
 <blockquote>
             If replacing a model or coding agent forces a redesign of the whole system,
             the architecture is coupled to products rather than capabilities.
           </blockquote>
 <p>
-            The system described here was inspired by recent work on long-running coding
-            agents, including Cursor's experiments with planners, workers, self-coordination,
-            continuous executors, and recursive planning. Their results reinforced a useful
-            idea: autonomy benefits from explicit ownership and bounded roles, while flat
-            coordination and overloaded agents create pathological behavior.<sup><a aria-label="Reference 1" class="ref-call" href="#ref-1">[1]</a></sup>
-</p>
-<p>
-            I treated that as a starting hypothesis and built a smaller local harness to
-            test the same family of principles under observable, reproducible conditions.
+            The starting point for this project was Cursor's public writing on long-running
+            coding agents: planners, workers, self-coordination, continuous executors,
+            recursive planning.<sup><a aria-label="Reference 1" class="ref-call" href="#ref-1">[1]</a></sup>
+            I took one idea from it seriously: autonomy gets better with explicit ownership and
+            bounded roles, and worse with flat coordination and agents that accumulate authority
+            nobody assigned them. I did not take their implementation, scale, or "self-driving
+            codebases" framing as settled; it is a vendor's blog post written to sell a product.
+            Directionally useful, not something I would stake a client's infrastructure on
+            without testing it myself. So I built a much smaller version, on my own Windows
+            machine, on my own time, to see which parts survive once the product names change.
           </p>
 </section>
 <section id="principles">
 <h2>The products are adapters. These are the contracts.</h2>
+<p>
+            None of the twelve principles below started as theory. They came out of watching
+            the first version of this system misbehave in small, specific ways, then asking
+            what rule would have stopped it. A few of them are close to obvious once you state
+            them out loud. A few I only believe as far as one validated run lets me, and I say
+            so directly in section seven.
+          </p>
 <div class="principles">
-<div class="principle"><div class="n">01</div><div class="title">Intent has one owner</div><div class="desc">Delegation distributes work, not accountability. One root role owns the user's objective until acceptance.</div></div>
-<div class="principle"><div class="n">02</div><div class="title">Planning and implementation are separate</div><div class="desc">A planner that also edits everything tends to collapse into a worker.</div></div>
-<div class="principle"><div class="n">03</div><div class="title">Workers are bounded</div><div class="desc">Each worker receives a narrow objective, scope, constraints, and completion condition.</div></div>
-<div class="principle"><div class="n">04</div><div class="title">Verification is authoritative</div><div class="desc">Worker self-report is evidence, not proof. Acceptance belongs to an independent verification step.</div></div>
-<div class="principle"><div class="n">05</div><div class="title">Challenge is different from implementation</div><div class="desc">An independent challenger should be free to disagree with the implementation path rather than continue it.</div></div>
-<div class="principle"><div class="n">06</div><div class="title">Memory is knowledge, not coordination</div><div class="desc">Persistent memory stores decisions, conventions, discoveries, and lessons—not locks, task queues, or worker status.</div></div>
-<div class="principle"><div class="n">07</div><div class="title">Project identity must be explicit</div><div class="desc">Long-lived tool processes may run from the wrong directory. Route state from the authoritative workspace.</div></div>
-<div class="principle"><div class="n">08</div><div class="title">Parallelism requires isolation</div><div class="desc">Independent mutation-capable workers need isolated workspaces or worktrees before results are integrated.</div></div>
-<div class="principle"><div class="n">09</div><div class="title">Observability is part of correctness</div><div class="desc">A system should be able to reconstruct who acted, with which permissions, on which workspace, and with what result.</div></div>
-<div class="principle"><div class="n">10</div><div class="title">Policies should become invariants</div><div class="desc">Natural-language constraints are useful, but cardinality, mutability, and approval boundaries eventually need runtime enforcement.</div></div>
-<div class="principle"><div class="n">11</div><div class="title">Failure should degrade capability, not assurance silently</div><div class="desc">Quota exhaustion, provider failure, tool denial, and memory outages are normal operating conditions.</div></div>
-<div class="principle"><div class="n">12</div><div class="title">Completion requires evidence</div><div class="desc">“Done” should be a verified state transition, not a confidence statement from a child agent.</div></div>
+<div class="principle"><div class="n">01</div><div class="title">Intent has one owner</div><div class="desc">Delegation distributes work, not accountability. One root role answers for the objective from the first prompt to final acceptance.</div></div>
+<div class="principle"><div class="n">02</div><div class="title">Planning and implementation are separate</div><div class="desc">A planner that reads enough code to plan well is already tempted to fix it directly. Separating the roles keeps that temptation from becoming a habit.</div></div>
+<div class="principle"><div class="n">03</div><div class="title">Workers are bounded</div><div class="desc">Each worker receives a narrow objective, scope, constraints, and completion condition, so a failure can be traced to the exact boundary it crossed.</div></div>
+<div class="principle"><div class="n">04</div><div class="title">Verification is authoritative</div><div class="desc">Worker self-report is evidence, not proof. Acceptance belongs to an independent step that can outrank the worker's own claim.</div></div>
+<div class="principle"><div class="n">05</div><div class="title">Challenge is different from implementation</div><div class="desc">An independent challenger should be free to disagree with the implementation path rather than continue it, and should never be the one who fixes what it finds.</div></div>
+<div class="principle"><div class="n">06</div><div class="title">Memory is knowledge, not coordination</div><div class="desc">Persistent memory stores decisions, conventions, discoveries, and lessons, not locks, task queues, or worker status that goes stale the moment a session ends.</div></div>
+<div class="principle"><div class="n">07</div><div class="title">Project identity must be explicit</div><div class="desc">Long-lived tool processes keep the directory they were launched from. Route state from the authoritative workspace, not from wherever the process happened to start.</div></div>
+<div class="principle"><div class="n">08</div><div class="title">Parallelism requires isolation</div><div class="desc">Independent mutation-capable workers need isolated workspaces or worktrees before results are integrated, or they corrupt each other's changes silently.</div></div>
+<div class="principle"><div class="n">09</div><div class="title">Observability is part of correctness</div><div class="desc">A system that cannot reconstruct who acted, with which permissions, on which workspace, and with what result is not ready to be trusted with anything irreversible.</div></div>
+<div class="principle"><div class="n">10</div><div class="title">Policies should become invariants</div><div class="desc">Natural-language constraints are useful, but cardinality, mutability, and approval boundaries eventually need runtime enforcement, because an instruction is not the same thing as a limit.</div></div>
+<div class="principle"><div class="n">11</div><div class="title">Failure should degrade capability, not silently reduce assurance</div><div class="desc">Quota exhaustion, provider failure, tool denial, and memory outages are normal operating conditions. The system should say so instead of finishing quietly as if nothing changed.</div></div>
+<div class="principle"><div class="n">12</div><div class="title">Completion requires evidence</div><div class="desc">"Done" should be a verified state transition, not a confidence statement from a child agent that has every incentive to report success.</div></div>
 </div>
+<p>
+            The ones I would bet on surviving harder problems are tied to authority and evidence:
+            one owner for intent, a worker's claim that is not proof by itself, memory that never
+            carries runtime state. I am least sure about the ones that are a matter of degree: how
+            bounded a worker should be, how deep recursive planning should go, how much model
+            diversity buys a challenger. Those only held up in a single trivial run.
+          </p>
 </section>
 <section id="architecture">
 <h2>A small number of roles with clear authority.</h2>
@@ -168,33 +199,47 @@ flowchart TD
 </div>
 <h3>Root planner</h3>
 <p>
-            Owns the user's intent, global decomposition, routing, integration decisions,
-            final acceptance, and durable-memory lifecycle. It should understand enough of
-            the repository to make good decisions, but routine implementation belongs elsewhere.
+            Owns the user's intent, decomposition, routing, integration decisions, final
+            acceptance, and the durable-memory lifecycle. It needs to understand enough of the
+            repository to decide well, which is also the failure mode: a planner that reads
+            enough code to plan well starts wanting to fix what it sees. I watched that happen in
+            early sessions, small drive-by edits justified as "while I'm here." The boundary only
+            holds if the planner's tools make implementation inconvenient. A prompt telling it
+            not to bother is not enough on its own.
           </p>
 <h3>Subplanner</h3>
 <p>
-            Owns one bounded domain. It decomposes that scope further when necessary and
-            hands precise tasks to workers. Recursive planning is allowed, but the hierarchy
-            should remain as shallow as the task permits.
+            Owns one bounded domain, decomposes it further when necessary, and hands precise
+            tasks to workers. Recursive planning is allowed, and in the validated run it used
+            that latitude on its own initiative, which finding 01 covers in detail. The hierarchy
+            should stay as shallow as the task allows: every extra layer is a place where an
+            instruction can get reinterpreted instead of relayed.
           </p>
 <h3>Implementation worker</h3>
 <p>
-            Owns one scoped code change. It may inspect, edit, and run local checks according
-            to its permissions, then returns a concise handoff. It does not own final acceptance.
+            Owns one scoped code change. It may inspect, edit, and run local checks within its
+            permissions, then hands back a concise report. It does not own final acceptance, and
+            in this run it could not always run the checks it might claim responsibility for: it
+            hit an approval boundary trying to execute the test command and had to hand that step
+            back up rather than confirm it directly. That is the boundary working as intended. A
+            worker that could always self-certify would make the verifier decorative.
           </p>
 <h3>Verifier and challenger</h3>
 <p>
-            Verification proves that acceptance criteria are satisfied. Challenge is a separate
-            assurance function: an independent reasoning path looks for defects, missed requirements,
-            or unnecessary changes. Model diversity can help here, but diversity is a tactic rather
-            than the architectural principle.
+            Verification proves that acceptance criteria are satisfied. It is not a vote or a
+            summary. Challenge is a separate assurance function: an independent reasoning path
+            looks for defects, missed requirements, or changes nobody asked for. Model diversity
+            helps, but it is a tactic, not the reason the role exists. The harder discipline is
+            making sure the challenger never fixes what it finds. A reviewer that quietly patches
+            the code it is grading has stopped being independent, even when the patch is correct.
           </p>
 <h3>Durable memory</h3>
 <p>
-            Memory stores project knowledge that should survive sessions: architecture decisions,
-            stable conventions, recurring problems, important discoveries, and reusable lessons.
-            Runtime coordination remains outside memory.
+            Memory stores project knowledge meant to outlive the conversation: architecture
+            decisions, stable conventions, recurring problems, discoveries worth not
+            rediscovering. It has no business holding locks, task queues, or worker status, which
+            goes stale the moment a session ends. A memory system that is sometimes right about
+            live state is worse than one that makes no claim about it at all.
           </p>
 <div class="diagram wide">
 <div class="diagram-label">Control loop</div>
@@ -216,9 +261,11 @@ flowchart TD
 <section id="implementation">
 <h2>One concrete stack, explicitly treated as temporary.</h2>
 <p>
-            The first validated implementation was built on Windows in September 2026.
-            Its purpose is to make the principles executable, not to define the architecture
-            in terms of any one vendor.
+            The first validated implementation was built on Windows in September 2026, to make
+            the principles executable, not to define the architecture around one vendor. Windows
+            is also just the platform I work on. Most public writing about long-running coding
+            agents assumes Linux or macOS, and running the same pattern from PowerShell surfaces
+            path and process-identity assumptions that never show up in the demos.
           </p>
 <div class="table-wrap wide">
 <table class="reference-table"><caption>Reference implementation adapters and their architectural requirements</caption>
@@ -244,6 +291,21 @@ flowchart TD
 <strong>Tested environment.</strong> Windows PowerShell, DSH 0.1.5-rc.1 and Engram 1.20.0.
             The configuration below is an implementation snapshot, not part of the vendor-neutral contract.
           </div>
+<p>
+            Each adapter earned its slot for a narrow reason, not because it is the best product
+            in its category. DSH gives scoped tools, child agents, model routing, and traceable
+            delegation in one runtime, the minimum a root planner needs to enforce the role
+            contract instead of describing it. Opus plans because the root's job is mostly
+            judgment under ambiguity, where the extra reasoning budget pays for itself. Sonnet
+            runs the subplanner because a bounded domain does not need that budget. Claude Code
+            implements because it is repository-aware and already bounded by design. Codex
+            challenges for one reason above the rest: it fails differently than Claude does,
+            the entire point of an independent reviewer. Engram holds memory because it is
+            persistent, searchable, and project-scoped over MCP rather than baked into one
+            vendor's session state. None of these are permanent. Any one gets replaced the day a
+            better adapter meets the same requirement, and the role contract should not need to
+            change.
+          </p>
 <h3>A vendor-neutral role contract</h3>
 <div class="code-block">
 <button aria-label="Copy code block 1" class="copy" type="button">Copy</button>
@@ -297,8 +359,14 @@ memory:
         failOnStartupError: true</code></pre>
 </div>
 <p>
-            The memory adapter intentionally does not hard-code a project name.
-            Project identity is established by the root from the active workspace at session start.
+            The memory adapter intentionally does not hard-code a project name, to prevent a
+            specific failure. Engram runs as a long-lived MCP process started with
+            <code>engram mcp --tools=agent</code>, and it keeps whatever directory it launched
+            from, not necessarily wherever the root planner is coding right now. Hard-code
+            <code>--project</code> and every repository you open can end up writing into the
+            same bucket. The fix: the root reads its own working directory and passes it
+            explicitly at <code>mem_session_start</code>, added after memory calls once came
+            close to resolving against the wrong repository entirely.
           </p>
 <div class="diagram wide diagram-native-viewbox">
 <div class="diagram-label">Project-scoped memory</div>
@@ -321,6 +389,178 @@ sequenceDiagram
     R-&gt;&gt;M: retrieve durable memory
             </pre>
 </div>
+<p>
+            The full configuration lives outside this post. The settings file, the provider
+            patch, the agent preset, the Windows setup walkthrough, and the eval used for V0.1
+            are published in the
+            <a href="https://github.com/SergioMazariego/agentic-engineering-harness" rel="noopener noreferrer" target="_blank">agentic-engineering-harness</a>
+            repository. Read this article for the argument. Go to the repository to actually
+            run the same harness.
+          </p>
+</section>
+<section id="prompts">
+<h2>The boundaries live in the prompts, until they don't.</h2>
+<p>
+            Sections three and four describe the architecture. This section is the text each
+            role actually receives, because prompts are where authority boundaries currently
+            live. What follows is quoted from the preset that ran the validated session, trimmed
+            to the lines that carry authority.
+          </p>
+<h3>Root planner</h3>
+<p>
+            The root persona opens with a claim about ownership before it says anything about
+            tone or task:
+          </p>
+<div class="code-block">
+<button aria-label="Copy code block 4" class="copy" type="button">Copy</button>
+<pre><code>You are the ROOT PLANNER of a hierarchical autonomous software
+engineering system, powered by {{model}}.
+
+You own the user's original objective and maintain global understanding
+of the project until the objective is complete.
+
+Your primary responsibility is planning, decomposition, delegation,
+integration reasoning, verification and durable project memory —
+not routine implementation.
+
+Do not perform routine implementation yourself with write, edit or
+PowerShell. Delegate implementation to a worker.
+
+Never blindly trust a worker result.
+
+Never declare the objective complete merely because one worker reports
+success.
+
+Completion is your responsibility.</code></pre>
+</div>
+<p>
+            The "not routine implementation" line exists because I kept catching the root doing
+            exactly that, small drive-by edits justified to itself as efficient. "Never blindly
+            trust" exists because early sessions took a worker's "done" at face value more often
+            than I like admitting. Every line here is a scar, none of it written speculatively.
+          </p>
+<p>
+            The memory rules get their own block because getting them wrong routes durable state
+            into the wrong project without anyone noticing:
+          </p>
+<blockquote>
+            Never hard-code an Engram project name. Never infer the project from the MCP server
+            process directory when the active workspace directory is available.
+          </blockquote>
+<p>
+            Section four covers why: a long-lived MCP process keeps whatever directory it
+            started in, not the repository you are coding in five conversations later, and that
+            gap cost me a session's worth of memory calls before this rule existed. The same
+            persona then lists what belongs in memory and what does not:
+          </p>
+<div class="code-block">
+<button aria-label="Copy code block 5" class="copy" type="button">Copy</button>
+<pre><code>Good candidates include:
+- architecture decisions
+- important configuration decisions
+- stable project conventions
+- non-obvious discoveries
+- completed bug fixes with reusable lessons
+- recurring failure modes
+- significant technical constraints
+- patterns that future sessions should follow
+
+Do NOT save:
+- task progress
+- worker status
+- temporary hypotheses
+- logs
+- transient command output
+- implementation chatter
+- short-lived todo items
+- agent coordination state</code></pre>
+</div>
+<p>
+            That second list is principle 06 as an instruction instead of a claim: everything on
+            it is something an early version of this system tried to store as if Engram were a
+            task queue, which goes stale the moment a session ends.
+          </p>
+<h3>Subplanner</h3>
+<p>
+            The subplanner's persona is shorter, because it owns less:
+          </p>
+<div class="code-block">
+<button aria-label="Copy code block 6" class="copy" type="button">Copy</button>
+<pre><code>You are a SUBPLANNER in a hierarchical autonomous software
+engineering system.
+
+You own only the bounded objective delegated to you by your parent.
+
+Do not directly implement code.
+
+You do not have authority over durable project memory.
+
+Do not start Engram sessions.
+
+Do not save Engram memories.
+
+Do not use Engram as a task queue, scratchpad, status mechanism,
+lock manager or coordination channel.
+
+You do not have access to Codex by policy.
+
+Escalation to Codex belongs to the root planner.
+
+Prefer the shallowest hierarchy capable of solving the problem.</code></pre>
+</div>
+<p>
+            Most of that list is things it is told not to do. Left unstated, memory writes or
+            Codex access would have made it a second root planner with none of the accountability.
+          </p>
+<h3>Where a prompt stops being enough</h3>
+<p>
+            Everything above is a request, and the runtime does not know or care whether an agent
+            reads its persona carefully. Worker cardinality is a request, which is what finding
+            01 in section seven exploited. The subplanner's tool access is not a request:
+          </p>
+<div class="code-block">
+<button aria-label="Copy code block 7" class="copy" type="button">Copy</button>
+<pre><code>maxDepth: 2
+
+toolFilter:
+  deny:
+    - write
+    - edit
+    - pwsh
+    - subagent_codex</code></pre>
+</div>
+<p>
+            A subplanner that calls <code>write</code> or <code>pwsh</code> gets no persona
+            reminder; the tool is not there. That is principle 10 as configuration instead of
+            prose. The pattern was not applied everywhere: worker cardinality stayed a sentence
+            in the persona instead of a <code>toolFilter</code> entry, which is why finding 01
+            happened. A prompt is the wrong layer for anything you actually need to hold.
+          </p>
+<h3>Implementation worker and challenger</h3>
+<p>
+            Claude Code and Codex get configuration, not personas: <code>provider: claude-code</code>
+            or <code>provider: codex</code>, both <code>backgroundMode: one-shot</code>, both
+            <code>maxDepth: provider-managed</code>. What the root persona fixes instead is the
+            shape every delegated task and worker report has to take:
+          </p>
+<blockquote>
+            Each delegated task must have one clear objective, explicit scope and boundaries,
+            relevant technical constraints, expected verification, and a clear completion
+            condition. Workers must return what they changed, tests or checks performed,
+            important discoveries, unresolved issues, and recommended follow-up work.
+          </blockquote>
+<p>
+            <code>one-shot</code> mode is also why finding 03 happened: it runs, reports, and
+            exits, and once it exits it stops showing up in DSH's live-agent list, which is
+            exactly what I found looking for completed workers after the run.
+          </p>
+<p>
+            None of this is enforced the way the subplanner's <code>toolFilter</code> is: the
+            save and never-save lists are still prose, not policy. The complete preset, including
+            every prompt quoted here, is published in the
+            <a href="https://github.com/SergioMazariego/agentic-engineering-harness" rel="noopener noreferrer" target="_blank">agentic-engineering-harness</a>
+            repository at <code>presets/self-driving/agent.cordis.yml</code>.
+          </p>
 </section>
 <section id="validation">
 <h2>The first test was intentionally trivial.</h2>
@@ -330,7 +570,23 @@ sequenceDiagram
             add exactly three tests, introduce no dependencies, and make no unrelated changes.
           </p>
 <p>
+            A hard task would have made the result unreadable. If a genuinely difficult problem
+            had failed, I would not have known whether the orchestration broke or the task was
+            simply beyond what the models can do today, and those two failures look identical
+            from the outside. A trivial task removes that ambiguity: if <code>safeDivide</code>
+            does not get built correctly by five coordinating roles, the roles are the problem,
+            full stop.
+          </p>
+<p>
             The task itself was not the experiment. The orchestration path was.
+          </p>
+<p>
+            That is why the eval defines a required route, not just a required outcome: root to
+            one subplanner, subplanner to one implementation worker, worker back to root, root to
+            verification, root to an independent challenger, root to durable memory. Getting
+            <code>safeDivide</code> right was necessary but not the point. The point was watching
+            whether five roles with different authority stayed inside the boundaries I had drawn,
+            or whether those boundaries were decorative the moment nobody read the prompt closely.
           </p>
 <div class="diagram wide">
 <div class="diagram-label">Validated execution path</div>
@@ -363,7 +619,7 @@ flowchart TD
 </div>
 <h3>Repository result</h3>
 <div class="code-block">
-<button aria-label="Copy code block 4" class="copy" type="button">Copy</button>
+<button aria-label="Copy code block 8" class="copy" type="button">Copy</button>
 <pre><code>src/math.js | 7 +++++++
 test.js     | 6 +++++-
 2 files changed, 12 insertions(+), 1 deletion(-)</code></pre>
@@ -371,9 +627,14 @@ test.js     | 6 +++++-
 <p>No dependency changes. No unrelated files. Root-level tests passed.</p>
 <h3>Cross-session memory</h3>
 <p>
-            A completely new conversation initialized memory from the same workspace and
-            recovered the project's testing and zero-dependency convention without repository
-            inspection, shell access, or delegation.
+            A completely new conversation, no repository inspection, no shell access, no
+            delegation, initialized memory from the same workspace directory and recalled the
+            exact convention written in the prior session: tests use Node's built-in
+            <code>node:assert/strict</code>, <code>npm test</code> runs <code>node test.js</code>,
+            and the project intentionally carries no dependencies or devDependencies. The root
+            did not reconstruct any of that by reading files. It asked memory and got back the
+            same answer a human would have found by reading the repository, without reading the
+            repository.
           </p>
 <div class="diagram wide">
 <div class="diagram-label">Persistence across conversations</div>
@@ -390,50 +651,109 @@ flowchart LR
 <h2>The imperfections were more useful than a clean demo.</h2>
 <div class="finding">
 <div class="finding-head"><span class="finding-num">01</span><span class="finding-title">Prompt policy is not structural policy</span></div>
-<p>The run requested exactly one implementation worker. The subplanner still created another worker for verification.</p>
-<p><strong>Implication:</strong> worker cardinality and role permissions should become runtime-enforced invariants.</p>
+<p>
+            I had written the instruction plainly: exactly one implementation worker. I expected
+            the subplanner to follow it, because it is a short, unambiguous sentence. It did not.
+            It spawned a second worker to double-check the first one's diff, on its own
+            initiative, because verifying its own delegation seemed reasonable in the moment.
+            Nobody told it to skip that step, so it did not. The sentence was clear. The system
+            had no mechanism that made ignoring it cost anything.
+          </p>
+<p><strong>Implication:</strong> worker cardinality and role permissions should become runtime-enforced invariants, not instructions a subplanner is free to reinterpret.</p>
 </div>
 <div class="finding">
 <div class="finding-head"><span class="finding-num">02</span><span class="finding-title">Worker verification was not authoritative</span></div>
-<p>An unattended coding worker could edit files but hit an approval boundary when attempting to run the test command.</p>
-<p><strong>Implication:</strong> final acceptance should remain with a trusted verifier until worker execution policy is strong enough.</p>
+<p>
+            This is the one failure I actually wanted to see. If the worker had run
+            <code>npm test</code> on its own and simply reported "tests pass," I would have had
+            no way to tell a genuine pass from an optimistic one. Instead the approval policy
+            blocked the shell call outright, forcing the worker to hand the claim back
+            unverified and the root to run the tests itself. The failure I worried about, a
+            worker misreporting a result in good faith, never got the chance to happen, because
+            the environment would not let it self-certify.
+          </p>
+<p><strong>Implication:</strong> final acceptance should remain with a trusted verifier until worker execution policy is strong enough to make a worker's own test run trustworthy.</p>
 </div>
 <div class="finding">
 <div class="finding-head"><span class="finding-num">03</span><span class="finding-title">One-shot children were not fully visible in one view</span></div>
-<p>After completion, the continuable-agent list contained no one-shot children. Run records were needed to reconstruct participation.</p>
+<p>
+            When the run finished I went looking for the child agents to confirm what each had
+            done, and the live-agent view had already forgotten about them. One-shot children do
+            not persist in that list once they exit; only the run records kept the trail. Same
+            complaint I would file against a proxy that does not log outbound connections:
+            absence of evidence is not evidence of absence, but you cannot tell the difference
+            from inside a tool that is supposed to show you.
+          </p>
 <p><strong>Implication:</strong> lineage requires a durable trace plane, not only live-agent state.</p>
 </div>
 <div class="finding">
 <div class="finding-head"><span class="finding-num">04</span><span class="finding-title">The memory process cwd was not the active project</span></div>
-<p>Implicit project detection could resolve the harness repository instead of the current workspace.</p>
+<p>
+            I expected the memory server to just know which project it was talking to, the way
+            most tools infer things from wherever you launched them. It cannot, safely, for the
+            reason sections four and five cover: a long-lived process keeps the directory it
+            started with. Left to implicit detection, this session would have written durable
+            memory against <code>deepseek-harness</code>, the tool's own repository, while I
+            worked in a different project entirely. Not a hypothetical, the default behavior.
+          </p>
 <p><strong>Implication:</strong> session/project identity must be established explicitly from authoritative workspace context.</p>
 </div>
 <div class="finding">
 <div class="finding-head"><span class="finding-num">05</span><span class="finding-title">Provider limits are part of normal operation</span></div>
-<p>An earlier dry run reached the independent reviewer's quota while the rest of the hierarchy completed successfully.</p>
+<p>
+            The rest of the hierarchy did not notice or care. Root, subplanner, and worker all
+            finished as if nothing were wrong; the only signal that assurance had dropped was
+            that the challenger's step never produced output. In security work that is the
+            failure mode that matters: not the loud crash, the silent skip reported upstream as
+            a clean run.
+          </p>
 <p><strong>Implication:</strong> the system needs graceful degradation and an explicit reduction in assurance when a role is unavailable.</p>
 </div>
 <div class="finding">
 <div class="finding-head"><span class="finding-num">06</span><span class="finding-title">Memory metadata can disagree with session routing</span></div>
-<p>Session routing and search resolved the correct repository while one direct observation lookup surfaced inconsistent project metadata.</p>
-<p><strong>Implication:</strong> project-identity assertions belong in memory integrity checks.</p>
+<p>
+            Session start and search both agreed on <code>dsh-mini-demo</code>, correctly. A
+            direct lookup on a single stored observation then came back with a header naming
+            <code>deepseek-harness</code> instead, even though the content was plainly about the
+            demo project. Two code paths inside the same memory system disagreed about which
+            project they were looking at. Nothing leaked this time, but it is the kind of quiet
+            inconsistency that matters more once memory holds something sensitive.
+          </p>
+<p><strong>Implication:</strong> project-identity assertions belong in memory integrity checks, not just in session routing.</p>
 </div>
 </section>
 <section id="roadmap">
 <h2>The goal is to earn stronger claims, not add more agents.</h2>
+<p>
+            It would be easy to answer every finding above by adding a role: a cardinality
+            enforcer, a lineage daemon, a project-identity oracle. I am deliberately not doing
+            that yet. Five roles is already enough surface area, and every new agent is one more
+            place where authority can leak, one more prompt that can be misread, one more thing
+            that has to show up correctly in an audit trail. The roadmap below turns findings
+            into tests and invariants first. A new role earns its place by surviving an
+            experiment, not by sounding useful in a design meeting.
+          </p>
 <div class="roadmap">
-<div class="roadmap-item"><div class="version">V0.2</div><div><h3>Role conformance</h3><p>Move mutability, reviewer immutability, worker limits, and authority boundaries from prompts into runtime policy.</p></div></div>
-<div class="roadmap-item"><div class="version">V0.3</div><div><h3>Multi-project memory isolation</h3><p>Test several repositories, overlapping terms, renames, remotes, monorepos, and ambiguous project resolution.</p></div></div>
-<div class="roadmap-item"><div class="version">V0.4</div><div><h3>Failure recovery</h3><p>Inject provider outages, quota exhaustion, timeouts, malformed child output, shell denial, test failure, and memory outages.</p></div></div>
-<div class="roadmap-item"><div class="version">V0.5</div><div><h3>Parallel isolated workers</h3><p>Use Git worktrees or equivalent isolation and measure speedup, conflicts, duplicated work, integration errors, and token overhead.</p></div></div>
-<div class="roadmap-item"><div class="version">V0.6</div><div><h3>Routing policy</h3><p>Measure when a default worker, stronger worker, or model-diverse challenger improves outcome enough to justify its cost.</p></div></div>
-<div class="roadmap-item"><div class="version">V0.7</div><div><h3>Single strong agent vs hierarchy</h3><p>Run the same 20+ task corpus under both conditions and compare correctness, time, tokens, retries, defects, and human intervention.</p></div></div>
-<div class="roadmap-item"><div class="version">V0.8</div><div><h3>Long-horizon engineering</h3><p>Test multi-hour work, context compaction, interruptions, resume, evolving requirements, and intent drift.</p></div></div>
-<div class="roadmap-item"><div class="version">V0.9</div><div><h3>Completion correctness</h3><p>Turn “done” into a machine-checkable acceptance state with negative tests and incomplete-implementation traps.</p></div></div>
-<div class="roadmap-item"><div class="version">V0.10</div><div><h3>Adversarial security</h3><p>Red-team repository prompt injection, memory poisoning, secret exfiltration, malicious MCP output, destructive commands, and supply-chain attacks.</p></div></div>
-<div class="roadmap-item"><div class="version">V1.0+</div><div><h3>Autonomous security engineering</h3><p>Apply the same role contracts to vulnerability validation, detection engineering, DFIR, BAS, and incident-response automation.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.2</div><div><h3>Role conformance</h3><p>Move mutability, reviewer immutability, worker limits, and authority boundaries from prompts into runtime policy, so "exactly one worker" is enforced, not merely requested.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.3</div><div><h3>Multi-project memory isolation</h3><p>Test several repositories, overlapping terms, renames, remotes, and monorepos, to find out whether the V0.1 near-miss was luck or a pattern.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.4</div><div><h3>Failure recovery</h3><p>Inject provider outages, quota exhaustion, timeouts, malformed child output, shell denial, and test failure, and check that each degrades loudly instead of quietly.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.5</div><div><h3>Parallel isolated workers</h3><p>Use Git worktrees and measure speedup, conflicts, duplicated work, integration errors, and token overhead against running the same work serially.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.6</div><div><h3>Routing policy</h3><p>Measure when a stronger worker or model-diverse challenger improves outcome enough to justify its cost, instead of assuming the strongest model always wins.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.7</div><div><h3>Single strong agent vs hierarchy</h3><p>Run the same 20+ task corpus under both conditions and compare correctness, time, tokens, retries, defects, and human intervention. This is the comparison the thesis stands or falls on.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.8</div><div><h3>Long-horizon engineering</h3><p>Test multi-hour work, context compaction, interruptions, resume, and intent drift, none of which a five-minute eval can exercise.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.9</div><div><h3>Completion correctness</h3><p>Turn "done" into a machine-checkable acceptance state with negative tests and incomplete-implementation traps, instead of trusting a child agent's sign-off.</p></div></div>
+<div class="roadmap-item"><div class="version">V0.10</div><div><h3>Adversarial security</h3><p>Red-team repository prompt injection, memory poisoning, secret exfiltration, malicious MCP output, and destructive commands.</p></div></div>
+<div class="roadmap-item"><div class="version">V1.0+</div><div><h3>Autonomous security engineering</h3><p>Apply the same role contracts to vulnerability validation, detection engineering, DFIR, and incident response, which is the actual reason I built this.</p></div></div>
 </div>
 <h3>Metrics that should become first-class</h3>
+<p>
+            That list is long because "did it work" collapses too many failures into one word. A
+            run can pass its acceptance test and still leak a role violation, burn three times
+            the tokens a single agent would need, or quietly skip the challenger. If I only got
+            to keep three, I would keep task success, role violations, and token usage against a
+            single-agent baseline: whether the output is right, whether the architecture I claim
+            to run is the one that ran, and whether any of this is worth its complexity.
+          </p>
 <ul class="metrics">
 <li>task success</li>
 <li>acceptance criteria satisfied</li>
@@ -468,15 +788,29 @@ flowchart LR
 <section id="claim">
 <h2>What V0.1 proves, and what it does not.</h2>
 <p>
-            V0.1 does not prove that hierarchy is cheaper, faster, or more correct than a
-            single strong agent. It does not establish long-horizon reliability, adversarial
-            robustness, or safe autonomous deployment.
+            V0.1 does not prove that hierarchy is cheaper, faster, or more correct than a single
+            strong agent. It does not establish long-horizon reliability, adversarial robustness,
+            or that any of this is safe to run unattended against production code. One passing
+            run of one trivial task is not evidence of those things, and I would be skeptical of
+            anyone who claimed otherwise from this little data.
           </p>
 <p>
-            It does establish a working control loop: planning can be separated from implementation;
-            implementation can be independently verified; a model-diverse challenger can review the
-            result; durable project memory can survive conversations; and failure modes can be observed
-            precisely enough to become the next set of experiments.
+            What it does establish is a working control loop, once: planning separated from
+            implementation, implementation independently verified, a model-diverse challenger
+            reviewing the result, durable memory surviving across conversations, and failure
+            modes observed precisely enough to become the next set of experiments instead of
+            getting explained away.
+          </p>
+<p>
+            What would change my mind is the experiment in section eight that does not exist yet:
+            the same task corpus run once through a single strong agent and once through this
+            hierarchy, scored on correctness, time, tokens, retries, and human interventions. If
+            the hierarchy loses that comparison broadly, the extra roles are overhead dressed up
+            as architecture, and I would say so.
+          </p>
+<p>
+            Right now I have one clean run, six real findings, and a repository anyone can clone
+            to check my claims instead of taking my word for them.
           </p>
 </section>
 <section id="references">
@@ -489,6 +823,7 @@ flowchart LR
 <li id="ref-5"><a href="https://openai.com/index/unlocking-the-codex-harness/" rel="noopener noreferrer" target="_blank">OpenAI — Codex harness interfaces</a></li>
 <li id="ref-6"><a href="https://github.com/Gentleman-Programming/engram" rel="noopener noreferrer" target="_blank">Engram persistent memory</a></li>
 <li id="ref-7"><a href="https://github.com/Gentleman-Programming/engram/blob/main/DOCS.md" rel="noopener noreferrer" target="_blank">Engram technical reference</a></li>
+<li id="ref-8"><a href="https://github.com/SergioMazariego/agentic-engineering-harness" rel="noopener noreferrer" target="_blank">Agentic Engineering Harness — reference implementation and eval</a></li>
 </ol>
 <div class="note">
             Version-specific behavior will change. That is the point of separating
