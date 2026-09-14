@@ -106,31 +106,21 @@
 <section id="problem">
 <h2>Roles should survive the tools that implement them.</h2>
 <p class="lead">
-            I run detection engineering, adversarial simulation, and incident response for
-            a five-person team that works with banks across Central America. We have handled
-            more than a hundred incidents since 2020. None of that makes me an AI researcher.
-            It makes me someone who has spent a long time asking one plain question about any
-            system with privileged access: who is allowed to do what, and can you prove it
-            after the fact.
-          </p>
-<p>
-            Sometime in 2026 that question started applying to coding agents too. The public
-            conversation about agentic software engineering settled into a stack of product
-            names: one model plans, another coding tool edits, a memory server stores context, an
-            orchestration runtime wires them together. Fine for a demo, but a weak foundation for
-            an architecture, because every name in that stack is a product decision, and product
-            decisions change on a vendor's release schedule, not yours.
+            The public conversation about agentic software engineering settled into a stack
+            of product names: one model plans, another coding tool edits, a memory server
+            stores context, an orchestration runtime wires them together. That is fine for a
+            demo and weak as an architecture, because every name in that stack is a product
+            decision, and product decisions change on a vendor's release schedule, not yours.
           </p>
 <p>
             Models and coding tools will keep changing. What does not move as fast is authority:
             who owns intent, who may mutate code, who verifies the result, who can challenge the
             implementation path, what belongs in memory, and what evidence has to exist before
-            anything calls itself done. Those are the same questions I ask about a service
-            account or an EDR agent running with local admin. An automated process with write
-            access to a repository is, functionally, a privileged process, and in a bank's
-            network a privileged process nobody can name the owner of is a finding, not a
-            feature. I wanted coding agents held to that bar before trusting one near production
-            code.
+            anything calls itself done. Those are the same questions worth asking about any
+            service account or process running with elevated privileges. An automated process
+            with write access to a repository is, functionally, a privileged process, and one
+            nobody can name the owner of is a finding, not a feature. I wanted coding agents
+            held to that bar before trusting one near production code.
           </p>
 <blockquote>
             If replacing a model or coding agent forces a redesign of the whole system,
@@ -143,10 +133,10 @@
             I took one idea from it seriously: autonomy gets better with explicit ownership and
             bounded roles, and worse with flat coordination and agents that accumulate authority
             nobody assigned them. I did not take their implementation, scale, or "self-driving
-            codebases" framing as settled; it is a vendor's blog post written to sell a product.
-            Directionally useful, not something I would stake a client's infrastructure on
-            without testing it myself. So I built a much smaller version, on my own Windows
-            machine, on my own time, to see which parts survive once the product names change.
+            codebases" framing as settled; it is a vendor's blog post written to sell a product,
+            directionally useful but not something I would trust without testing it myself. So I
+            built a much smaller version to see which parts survive once the product names
+            change.
           </p>
 </section>
 <section id="principles">
@@ -160,7 +150,7 @@
           </p>
 <div class="principles">
 <div class="principle"><div class="n">01</div><div class="title">Intent has one owner</div><div class="desc">Delegation distributes work, not accountability. One root role answers for the objective from the first prompt to final acceptance.</div></div>
-<div class="principle"><div class="n">02</div><div class="title">Planning and implementation are separate</div><div class="desc">A planner that reads enough code to plan well is already tempted to fix it directly. Separating the roles keeps that temptation from becoming a habit.</div></div>
+<div class="principle"><div class="n">02</div><div class="title">Planning and implementation are separate</div><div class="desc">The planner that understands the code best is also the one most tempted to change it directly. Separating the roles keeps that temptation from becoming a habit.</div></div>
 <div class="principle"><div class="n">03</div><div class="title">Workers are bounded</div><div class="desc">Each worker receives a narrow objective, scope, constraints, and completion condition, so a failure can be traced to the exact boundary it crossed.</div></div>
 <div class="principle"><div class="n">04</div><div class="title">Verification is authoritative</div><div class="desc">Worker self-report is evidence, not proof. Acceptance belongs to an independent step that can outrank the worker's own claim.</div></div>
 <div class="principle"><div class="n">05</div><div class="title">Challenge is different from implementation</div><div class="desc">An independent challenger should be free to disagree with the implementation path rather than continue it, and should never be the one who fixes what it finds.</div></div>
@@ -237,9 +227,9 @@ flowchart TD
 <p>
             Memory stores project knowledge meant to outlive the conversation: architecture
             decisions, stable conventions, recurring problems, discoveries worth not
-            rediscovering. It has no business holding locks, task queues, or worker status, which
-            goes stale the moment a session ends. A memory system that is sometimes right about
-            live state is worse than one that makes no claim about it at all.
+            rediscovering. What it does not hold is coordination state, for the reason principle
+            06 gives. A memory system that is sometimes right about live state is worse than one
+            that makes no claim about it at all.
           </p>
 <div class="diagram wide">
 <div class="diagram-label">Control loop</div>
@@ -435,9 +425,9 @@ Completion is your responsibility.</code></pre>
 </div>
 <p>
             The "not routine implementation" line exists because I kept catching the root doing
-            exactly that, small drive-by edits justified to itself as efficient. "Never blindly
-            trust" exists because early sessions took a worker's "done" at face value more often
-            than I like admitting. Every line here is a scar, none of it written speculatively.
+            exactly that in early sessions. "Never blindly trust" exists because those same
+            sessions took a worker's "done" at face value more often than I like admitting. Every
+            line here is a scar, none of it written speculatively.
           </p>
 <p>
             The memory rules get their own block because getting them wrong routes durable state
@@ -448,10 +438,9 @@ Completion is your responsibility.</code></pre>
             process directory when the active workspace directory is available.
           </blockquote>
 <p>
-            Section four covers why: a long-lived MCP process keeps whatever directory it
-            started in, not the repository you are coding in five conversations later, and that
+            Section four covers why the process cannot be trusted to know this on its own; that
             gap cost me a session's worth of memory calls before this rule existed. The same
-            persona then lists what belongs in memory and what does not:
+            persona then spells out a concrete save list:
           </p>
 <div class="code-block">
 <button aria-label="Copy code block 5" class="copy" type="button">Copy</button>
@@ -478,7 +467,7 @@ Do NOT save:
 <p>
             That second list is principle 06 as an instruction instead of a claim: everything on
             it is something an early version of this system tried to store as if Engram were a
-            task queue, which goes stale the moment a session ends.
+            task queue.
           </p>
 <h3>Subplanner</h3>
 <p>
@@ -557,9 +546,9 @@ toolFilter:
 <p>
             None of this is enforced the way the subplanner's <code>toolFilter</code> is: the
             save and never-save lists are still prose, not policy. The complete preset, including
-            every prompt quoted here, is published in the
+            every prompt quoted here, lives in the same
             <a href="https://github.com/SergioMazariego/agentic-engineering-harness" rel="noopener noreferrer" target="_blank">agentic-engineering-harness</a>
-            repository at <code>presets/self-driving/agent.cordis.yml</code>.
+            repository, at <code>presets/self-driving/agent.cordis.yml</code>.
           </p>
 </section>
 <section id="validation">
@@ -679,10 +668,9 @@ flowchart LR
 <p>
             When the run finished I went looking for the child agents to confirm what each had
             done, and the live-agent view had already forgotten about them. One-shot children do
-            not persist in that list once they exit; only the run records kept the trail. Same
-            complaint I would file against a proxy that does not log outbound connections:
-            absence of evidence is not evidence of absence, but you cannot tell the difference
-            from inside a tool that is supposed to show you.
+            not persist in that list once they exit; only the run records kept the trail. Absence
+            from the live view is not evidence of absence, but you cannot tell the difference from
+            inside a tool that is supposed to show you.
           </p>
 <p><strong>Implication:</strong> lineage requires a durable trace plane, not only live-agent state.</p>
 </div>
@@ -691,10 +679,10 @@ flowchart LR
 <p>
             I expected the memory server to just know which project it was talking to, the way
             most tools infer things from wherever you launched them. It cannot, safely, for the
-            reason sections four and five cover: a long-lived process keeps the directory it
-            started with. Left to implicit detection, this session would have written durable
-            memory against <code>deepseek-harness</code>, the tool's own repository, while I
-            worked in a different project entirely. Not a hypothetical, the default behavior.
+            reason sections four and five cover. Left to implicit detection, this session would
+            have written durable memory against <code>deepseek-harness</code>, the tool's own
+            repository, while I worked in a different project entirely. Not a hypothetical, the
+            default behavior.
           </p>
 <p><strong>Implication:</strong> session/project identity must be established explicitly from authoritative workspace context.</p>
 </div>
@@ -703,9 +691,8 @@ flowchart LR
 <p>
             The rest of the hierarchy did not notice or care. Root, subplanner, and worker all
             finished as if nothing were wrong; the only signal that assurance had dropped was
-            that the challenger's step never produced output. In security work that is the
-            failure mode that matters: not the loud crash, the silent skip reported upstream as
-            a clean run.
+            that the challenger's step never produced output. That is the failure mode that
+            matters: not the loud crash, the silent skip reported upstream as a clean run.
           </p>
 <p><strong>Implication:</strong> the system needs graceful degradation and an explicit reduction in assurance when a role is unavailable.</p>
 </div>
