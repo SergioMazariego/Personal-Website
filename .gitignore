@@ -1,1 +1,28 @@
-mantis.html
+# Allowlist: this repo publishes a static site (GitHub Pages) at sergiomazariego.com.
+# Everything is ignored by default; only public site files are tracked.
+*
+
+!.gitignore
+!CNAME
+!robots.txt
+!sitemap.xml
+!index.html
+
+!assets/
+!assets/**
+!blog/
+!blog/**
+
+# Never publish, even inside allowed folders
+.env
+.env.*
+*.pem
+*.key
+*.log
+*.bak
+*.map
+.DS_Store
+Thumbs.db
+node_modules/
+_drafts/
+_work/
